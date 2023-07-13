@@ -10,7 +10,7 @@ class DefaultCompressor:
     def __init__(self, compressor, typ='text'):
         try:
             self.compressor = import_module(compressor)
-        except ImportError:
+        except ModuleNotFoundError:
             raise RuntimeError("Unsupported compressor")
         self.type = typ
     def get_compressed_len(self, x):
