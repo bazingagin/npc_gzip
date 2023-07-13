@@ -1,3 +1,7 @@
+### Code for Paper: “Low-Resource” Text Classification: A Parameter-Free Classification Method with Compressors
+
+This paper is accepted to Findings of [ACL2023](https://aclanthology.org/2023.findings-acl.426/).
+
 ### Require
 
 ```
@@ -40,6 +44,6 @@ By default, this will only use 100 test and training samples per class as a quic
 If we want to calculate accuracy from recorded distance file <DISTANCE DIR>, use
 
 ```
-python main_text.py --record --score --k 3 --distance_fn <DISTANCE DIR> 
+python main_text.py --record --score --distance_fn <DISTANCE DIR> 
 ```
 to calculate accuracy. Otherwise, the accuracy will be calculated automatically using the command in the last section.
