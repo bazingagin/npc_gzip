@@ -1,27 +1,16 @@
 # Compressor Framework
-import gzip
-import bz2
-import lzma
-# from PIL.PngImagePlugin import getchunks
-# from PIL import Image
 import sys
+from importlib import import_module
 from tqdm import tqdm
 import torch.nn.functional as F
-
-
 import io
-
 
 class DefaultCompressor:
     """for non-neural-based compressor"""
     def __init__(self, compressor, typ='text'):
-        if compressor == 'gzip':
-            self.compressor = gzip
-        elif compressor == 'bz2':
-            self.compressor = bz2
-        elif compressor == 'lzma':
-            self.compressor = lzma
-        else:
+        try:
+            self.compressor = import_module(compressor)
+        except ImportError:
             raise RuntimeError("Unsupported compressor")
         self.type = typ
     def get_compressed_len(self, x):
@@ -38,5 +27,6 @@ class DefaultCompressor:
 
 
 """Test Compressors"""
-# comp = DefaultCompressor('gzip')
-# print(comp.get_compressed_len('Hello world'))
+if __name__ == '__main__':
+    comp = DefaultCompressor('gzip')
+    print(comp.get_compressed_len('Hello world'))
