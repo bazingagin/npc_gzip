@@ -175,7 +175,7 @@ class KnnExpText:
 
     def calc_acc(
         self, k: int, label: str, train_label: str = None, provided_distance_matrix: list = None, rand: bool = False
-    ):
+    ) -> tuple:
         """
         Calculates the accuracy of the algorithm.
 
@@ -233,7 +233,7 @@ class KnnExpText:
         print("Accuracy is {}".format(sum(correct) / len(correct)))
         return pred, correct
 
-    def combine_dis_acc(self, k, data, label, train_data=None, train_label=None):
+    def combine_dis_acc(self, k: int, data: list, label: str, train_data: list = None, train_label: str = None) -> tuple:
         correct = []
         pred = []
         if train_label is not None:
@@ -272,7 +272,7 @@ class KnnExpText:
         print("Accuracy is {}".format(sum(correct) / len(correct)))
         return pred, correct
 
-    def combine_dis_acc_single(self, k, train_data, train_label, datum, label):
+    def combine_dis_acc_single(self, k: int, train_data: list, train_label: str, datum: list, label: str):
         # Support multi processing - must provide train data and train label
         distance4i = self.calc_dis_single_multi(train_data, datum)
         sorted_idx = np.argpartition(np.array(distance4i), range(k))
