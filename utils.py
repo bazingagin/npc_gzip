@@ -1,7 +1,6 @@
 import numpy as np
 import scipy
 import torch
-from scipy.spatial.distance import cosine
 
 
 def NCD(c1: float, c2: float, c12: float) -> float:
