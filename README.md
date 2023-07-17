@@ -35,7 +35,7 @@ By default, this will only use 100 test and training samples per class as a quic
 --test_idx_start <INT>
 --test_idx_end <INT> [These two args help us to run on a certain range of test set. Also helpful for calculating the distance matrix on the whole dataset.]
 --para [This will use multiprocessing to accelerate.]
---output_dir <DIR> [The output directory to save information of tested indicies or distance matrix.]
+--output_dir <DIR> [The output directory to save information of tested indices or distance matrix.]
 
 ```
 
