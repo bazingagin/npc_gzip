@@ -8,7 +8,7 @@ See `requirements.txt`.
 
 Install requirements in a clean environment:
 ```
-conda env create npc python=3.8
+conda create -n npc python=3.7
 conda activate npc
 pip install -r requirements.txt
 ```
