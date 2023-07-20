@@ -4,16 +4,13 @@ This paper is accepted to Findings of [ACL2023](https://aclanthology.org/2023.fi
 
 ### Require
 
+See `requirements.txt`.
+
+Install requirements in a clean environment:
 ```
-torch
-torchdata
-torchtext==0.11 (for dataset)
-numpy
-pathos (if need multiprocessing)
-scikit-learn
-tqdm
-unidecode
-datasets
+conda create -n npc python=3.7
+conda activate npc
+pip install -r requirements.txt
 ```
 
 ### Run
