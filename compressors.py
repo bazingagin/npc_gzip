@@ -13,18 +13,21 @@ class DefaultCompressor:
         except ModuleNotFoundError:
             raise RuntimeError("Unsupported compressor")
         self.type = typ
-    def get_compressed_len(self, x):
-        if self.type == 'text':
-            return len(self.compressor.compress(x.encode('utf-8')))
+
+    def get_compressed_len(self, x: str) -> int:
+        """
+        Calculates the size of `x` once compressed.
+
+        """
+        if self.type == "text":
+            return len(self.compressor.compress(x.encode("utf-8")))
         else:
             return len(self.compressor.compress(np.array(x).tobytes()))
-    def get_bits_per_char(self, original_fn):
-        with open(original_fn) as fo:
-            data = fo.read()
-            compressed_str = self.compressor.compress(data.encode('utf-8'))
-            return len(compressed_str)*8/len(data)
 
-
+    def get_bits_per_char(self, original_fn: str) -> float:
+        """
+        Returns the compressed size of the original function
+        in bits.
 
 """Test Compressors"""
 if __name__ == '__main__':
