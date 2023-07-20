@@ -1,20 +1,16 @@
 # Compressor Framework
-import bz2
-import gzip
-import lzma
-
+import sys
+from importlib import import_module
+from tqdm import tqdm
+import torch.nn.functional as F
+import io
 
 class DefaultCompressor:
     """for non-neural-based compressor"""
-
-    def __init__(self, compressor: str, typ: str = "text"):
-        if compressor == "gzip":
-            self.compressor = gzip
-        elif compressor == "bz2":
-            self.compressor = bz2
-        elif compressor == "lzma":
-            self.compressor = lzma
-        else:
+    def __init__(self, compressor, typ='text'):
+        try:
+            self.compressor = import_module(compressor)
+        except ModuleNotFoundError:
             raise RuntimeError("Unsupported compressor")
         self.type = typ
 
@@ -33,8 +29,7 @@ class DefaultCompressor:
         Returns the compressed size of the original function
         in bits.
 
-        """
-        with open(original_fn) as fo:
-            data = fo.read()
-            compressed_str = self.compressor.compress(data.encode("utf-8"))
-            return len(compressed_str) * 8 / len(data)
+"""Test Compressors"""
+if __name__ == '__main__':
+    comp = DefaultCompressor('gzip')
+    print(comp.get_compressed_len('Hello world'))
