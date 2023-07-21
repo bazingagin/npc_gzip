@@ -233,21 +233,19 @@ if __name__ == "__main__":
             para=args.para,
         )
     else:
-        if args.test_idx_fn is None:
-            output_rel_fn = "test_dis_idx_from_{}_to_{}".format(
-                args.test_idx_start, args.test_idx_end
-            )
-        else:
-            output_rel_fn = args.test_idx_fn.split("/")[-1]
         if not args.score:
+            if args.test_idx_start is None:
+                start_idx = 0
+            else:
+                start_idx = args.test_idx_start
             for i in range(0, len(test_data), 100):
                 print(
                     "from {} to {}".format(
-                        args.test_idx_start + i, args.test_idx_start + i + 100
+                        start_idx + i, start_idx + i + 100
                     )
                 )
                 output_rel_fn = "test_dis_idx_from_{}_to_{}".format(
-                    args.test_idx_start + i, args.test_idx_start + i + 100
+                    start_idx + i, start_idx + i + 100
                 )
                 output_dir = os.path.join(
                     args.output_dir, os.path.join("distance", args.dataset)
