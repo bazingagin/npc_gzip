@@ -100,6 +100,8 @@ if __name__ == '__main__':
             dataset_pair = load_swahili()
         elif args.dataset == 'filipino':
             dataset_pair = load_filipino()
+        else:
+            dataset_pair = load_custom_dataset(args.data_dir)
     num_classes = ds2classes[args.dataset]
     # choose indices
     if not args.all_test:
