@@ -1,285 +1,531 @@
 import csv
-import numpy as np
-import math
-import torch
 import os
+import random
+from collections import OrderedDict, defaultdict
+
+import numpy as np
+import torch
 import unidecode
-from collections import defaultdict, OrderedDict
-from sklearn.datasets import fetch_20newsgroups
-
-from collections import defaultdict
-from torch.utils.data import DataLoader, Subset
 from datasets import load_dataset
+from sklearn.datasets import fetch_20newsgroups
+from torch.utils.data import DataLoader, Subset
 
 
-class ToInt:
-    def __call__(self, pic):
-        return pic * 255
+def _load_csv_filepath(csv_filepath: str) -> list:
+    """
+    Loads three elements from a csv file and appends
+    them to a list.
 
+    Arguments:
+        csv_filepath (str): Filepath to .csv file.
 
-def read_fn_label(fn):
-    text2label = {}
-    with open(fn) as fo:
-        reader = csv.reader(fo, delimiter=',', quotechar='"')
+    Returns:
+        list: 2-dimensional list containing three elements.
+    """
+
+    data = []
+    with open(fn, "r") as f:
+        reader = csv.reader(f, delimiter=",", quotechar='"')
         for row in reader:
-            label, title, desc = row[0], row[1], row[2]
-            text = '. '.join([title, desc])
-            text2label[text] = label
+            data.append([row[0], row[1], row[2]])
+    return data
+
+
+def read_fn_label(fn: str) -> dict:
+    """
+    Reads `fn` and returns the a dictionary
+    containing the title+description: label
+    pair.
+
+    Arguments:
+        fn (str): Filepath to a csv file containing label, title, description.
+
+    Returns:
+        dict: {title. description: label} pairings.
+    """
+
+    text2label = {}
+    data = _load_csv_filepath(fn)
+    for row in data:
+        label, title, desc = row[0], row[1], row[2]
+        text = ". ".join([title, desc])
+        text2label[text] = label
+
     return text2label
 
-def read_label(fn):
-    labels = []
-    with open(fn) as fo:
-        reader = csv.reader(fo, delimiter=',', quotechar='"')
-        for row in reader:
-            label, title, desc = row[0], row[1], row[2]
-            labels.append(label)
+
+def read_label(fn: str) -> list:
+    """
+    Reads the first item from the `fn` csv filepath in each row.
+
+    Arguments:
+        fn (str): Filepath to a csv file containing label, title, description.
+
+    Returns:
+        list: Labels from the `fn` filepath.
+    """
+
+    labels = [row[0] for row in _load_csv_filepath(fn)]
     return labels
 
-def read_fn_compress(fn):
+
+def read_fn_compress(fn: str) -> list:
+    """
+    Opens a compressed file and returns the contents
+    and delimits the contents on new lines.
+
+    Arguments:
+        fn (str): Filepath to a compressed file.
+
+    Returns:
+        list: Compressed file contents line separated.
+    """
+
     text = unidecode.unidecode(open(fn).read())
-    text_list = text.strip().split('\n')
+    text_list = text.strip().split("\n")
     return text_list
 
-def read_torch_text_labels(ds, indicies):
+
+def read_torch_text_labels(dataset: list, indices: list):
+    """
+    Extracts the text and labels lists from a pytorch
+    `dataset` on `indices`.
+
+    Arguments:
+        dataset (list): List of lists containing text and labels.
+        indices (list): List of list indices to extract text and
+                         labels on from `dataset`.
+
+    Returns:
+        [list, list]: Text and Label pairs from `dataset` on `indices`.
+
+    """
     text_list = []
     label_list = []
-    for i, (label, line) in enumerate(ds):
-        if i in indicies:
-            text_list.append(line)
-            label_list.append(label)
+
+    for index in indices:
+        try:
+            row = dataset[index]
+        except IndexError:
+            row = None
+            pass
+
+        if row:
+            label_list.append(row[0])
+            text_list.append(row[1])
+
     return text_list, label_list
 
+
 def load_20news():
-    def process(d):
+    """
+    Loads the 20NewsGroups dataset from `torchtext`.
+
+    Returns:
+        tuple: Tuple of Lists, with training data at index 0 and test at
+               index 1.
+
+    """
+
+    def process(dataset):
         pairs = []
-        for i in range(len(d.data)):
-            text = d.data[i]
-            label = d.target[i]
+        for i in range(len(dataset.data)):
+            text = dataset.data[i]
+            label = dataset.target[i]
             pairs.append((label, text))
         return pairs
-    newsgroups_train = fetch_20newsgroups(subset='train')
-    newsgroups_test = fetch_20newsgroups(subset='test')
+
+    newsgroups_train = fetch_20newsgroups(subset="train")
+    newsgroups_test = fetch_20newsgroups(subset="test")
     train_ds, test_ds = process(newsgroups_train), process(newsgroups_test)
     return train_ds, test_ds
 
-def load_ohsumed_single(di):
-    def process(d):
-        ds = []
-        for dn in os.listdir(d):
-            if os.path.isdir(os.path.join(d, dn)):
-                label = dn
-                for fn in os.listdir(os.path.join(d, dn)):
-                    text = open(os.path.join(d, dn, fn)).read().strip()
-                    ds.append((label, text))
-        return ds
-    train_dir = os.path.join(di, 'training')
-    test_dir = os.path.join(di, 'test')
+
+def load_ohsumed_single(local_directory: str) -> tuple:
+    """
+    Loads the Ohsumed dataset from `local_directory`
+    assumes the existence of subdirectories `training`
+    and `test`.
+
+    :ref: https://paperswithcode.com/dataset/ohsumed
+
+    Arguments:
+        local_directory (str): Local path to directory containing the Ohsumed
+                               `training` and `test` subdirectories.
+
+    Returns:
+        tuple: Pair of training and testing datasets.
+    """
+
+    def process(data_directory: str) -> list:
+        dataset = []
+
+        # TODO: Replace with `glob` to crawl files into a list.
+        for directory_name in os.listdir(data_directory):
+            subdirectory_path = os.path.join(data_directory, directory_name)
+            if os.path.isdir(subdirectory_path):
+                label = directory_name
+                for filename in os.listdir(subdirectory_path):
+                    filepath = os.path.join(subdirectory_path, filename)
+
+                    if os.path.isfile(filepath):
+                        text = open(filepath).read().strip()
+                        dataset.append((label, text))
+        return dataset
+
+    train_dir = os.path.join(local_directory, "training")
+    test_dir = os.path.join(local_directory, "test")
     train_ds, test_ds = process(train_dir), process(test_dir)
     return train_ds, test_ds
 
-def load_ohsumed(di, split=0.9):
+
+def load_ohsumed(data_directory: str, split: float = 0.9) -> tuple:
+    """
+    Loads the Ohsumed dataset and performs a train-test-split.
+
+    Arguments:
+        data_directory (str): Directory containing the ohsumed dataset.
+        split (float): % train size split.
+
+    Returns:
+        tuple: Tuple of lists containing the training and testing datasets respectively.
+
+    """
     train_ds = []
     test_ds = []
-    for dn in os.listdir(di):
-        if os.path.isdir(os.path.join(di, dn)):
-            label = dn
-            texts = []
-            num_file = len(list(os.listdir(os.path.join(di, dn))))
-            split_point = math.ceil(num_file*split)
-            for i, fn in enumerate(os.listdir(os.path.join(di, dn))):
-                text = open(os.path.join(di, dn, fn)).read().strip()
-                texts.append(text)
-                if i<split_point:
+
+    for directory_name in os.listdir(data_directory):
+        if os.path.isdir(os.path.join(data_directory, directory_name)):
+            label = directory_name
+            subdirectory = os.path.join(data_directory, directory_name)
+            subdirectory_files = list(os.listdir(subdirectory))
+
+            for filename in subdirectory_files:
+                text = open(os.path.join(subdirectory, filename), "r").read().strip()
+                if random.random() <= split:
                     train_ds.append((label, text))
                 else:
                     test_ds.append((label, text))
+
     return train_ds, test_ds
 
-def load_r8(di, delimiter='\t'):
-    def process(fn):
-        l = []
-        text_list = open(fn).read().strip().split('\n')
-        for t in text_list:
-            label, text = t.split(delimiter)
-            l.append((label,text))
-        return l
-    test_fn = os.path.join(di, 'test.txt')
-    train_fn = os.path.join(di, 'train.txt')
+
+def load_r8(data_directory: str, delimiter: str = "\t") -> tuple:
+    """
+    Loads the R8 dataset.
+
+    Arguments:
+        data_directory (str): Directory containing the R8 dataset.
+        delimiter (str): File delimiter to parse on.
+
+    Returns:
+        tuple: Tuple of lists containing the training and testing datasets respectively.
+    """
+
+    def process(filename: str) -> list:
+        processed_data = []
+        text_list = open(filename, "r").read().strip().split("\n")
+        for row in text_list:
+            label, text = row.split(delimiter)
+            processed_data.append((label, text))
+        return processed_data
+
+    test_fn = os.path.join(data_directory, "test.txt")
+    train_fn = os.path.join(data_directory, "train.txt")
     train_ds, test_ds = process(train_fn), process(test_fn)
     return train_ds, test_ds
 
-def load_trec(di):
-    def process(fn):
-        l = []
-        with open(fn, encoding='ISO-8859-1') as fo:
-            reader = csv.reader(fo, delimiter=':')
+
+def load_trec(data_directory: str) -> tuple:
+    """
+    Loads the TREC dataset from a directory.
+
+    Arguments:
+        data_directory (str): Directory containing the TREC dataset.
+
+    Returns:
+        tuple: Tuple of lists containing the training and testing datasets respectively.
+    """
+
+    def process(filename: str) -> list:
+        processed_data = []
+        with open(fn, encoding="ISO-8859-1") as fo:
+            reader = csv.reader(fo, delimiter=":")
             for row in reader:
                 label, text = row[0], row[1]
-                l.append((label,text))
-        return l
-    test_fn = os.path.join(di, 'test.txt')
-    train_fn = os.path.join(di, 'train.txt')
+                processed_data.append((label, text))
+        return processed_data
+
+    test_fn = os.path.join(data_directory, "test.txt")
+    train_fn = os.path.join(data_directory, "train.txt")
     train_ds, test_ds = process(train_fn), process(test_fn)
     return train_ds, test_ds
 
-def load_kinnews():
-    def process(ds):
+
+def load_kinnews_kirnews(
+    dataset_name: str = "kinnews_kirnews", data_split: str = "kinnews_cleaned"
+):
+    """
+    Loads the KINNEWS and KIRNEWS datasets.
+    :ref: https://huggingface.co/datasets/kinnews_kirnews
+
+    Arguments:
+        dataset_name (str): Name of the dataset to be loaded.
+        data_split (str): The data split to be loaded.
+
+    Returns:
+        tuple: Tuple of lists containing the training and testing datasets respectively.
+    """
+
+    def process(data_directory: str):
         pairs = []
-        for pair in ds:
-            label = pair['label']
-            title = pair['title']
-            content = pair['content']
-            pairs.append((label, title+' '+content))
+        for pair in data_directory:
+            label = pair["label"]
+            title = pair["title"]
+            content = pair["content"]
+            pairs.append((label, title + " " + content))
         return pairs
-    ds = load_dataset("kinnews_kirnews", "kinnews_cleaned")
-    train_ds, test_ds = process(ds['train']), process(ds['test'])
+
+    ds = load_dataset(dataset_name, data_split)
+    train_ds, test_ds = process(ds["train"]), process(ds["test"])
     return train_ds, test_ds
 
-def load_kirnews():
-    def process(ds):
-        pairs = []
-        for pair in ds:
-            label = pair['label']
-            title = pair['title']
-            content = pair['content']
-            pairs.append((label, title+' '+content))
-        return pairs
-    ds = load_dataset("kinnews_kirnews", "kirnews_cleaned")
-    train_ds, test_ds = process(ds['train']), process(ds['test'])
-    return train_ds, test_ds
 
-def load_swahili():
-    def process(ds):
+def load_swahili() -> tuple:
+    """
+    Loads the Swahili dataset
+
+    Returns:
+        tuple: Tuple of lists containing the training and testing datasets respectively.
+    """
+
+    def process(dataset: list) -> list:
         pairs = []
-        for pair in ds:
-            label = pair['label']
-            text = pair['text']
+        for pair in dataset:
+            label = pair["label"]
+            text = pair["text"]
             pairs.append((label, text))
         return pairs
-    ds = load_dataset('swahili_news')
-    train_ds, test_ds = process(ds['train']), process(ds['test'])
+
+    ds = load_dataset("swahili_news")
+    train_ds, test_ds = process(ds["train"]), process(ds["test"])
     return train_ds, test_ds
+
 
 def load_filipino():
     """deprecated - datasets on huggingface have overlapped train&test"""
     def process(ds):
+    """
+    Loads the Dengue Filipino dataset
+
+    Returns:
+        tuple: Tuple of lists containing the training and testing datasets respectively.
+    """
+
+    def process(dataset: list) -> list:
         label_dict = OrderedDict()
-        d = {'absent': 0, 'dengue': 1, 'health': 2, 'mosquito': 3, 'sick': 4}
-        for k,v in d.items():
+        d = {"absent": 0, "dengue": 1, "health": 2, "mosquito": 3, "sick": 4}
+        for k, v in d.items():
             label_dict[k] = v
+
         pairs = []
-        for pair in ds:
-            text = pair['text']
+        for pair in dataset:
+            text = pair["text"]
             for k in label_dict:
                 if pair[k] == 1:
                     label = label_dict[k]
             pairs.append((label, text))
         return pairs
-    ds = load_dataset('dengue_filipino')
-    train_ds, test_ds = process(ds['train']), process(ds['test'])
+
+    ds = load_dataset("dengue_filipino")
+    train_ds, test_ds = process(ds["train"]), process(ds["test"])
     return train_ds, test_ds
 
-def read_img_with_label(dataset, indicies, flatten=True):
+
+def read_img_with_label(dataset: list, indices: list, flatten=True):
+    """
+    Loads items from `dataset` based on the indices listed in `indices`
+    and optionally flattens them.
+
+    Arguments:
+        dataset (list): List of images.
+        indices (list): indices of `dataset` to be returned.
+        flatten (bool): [Optional] Optionally flatten the image.
+
+    Returns:
+        tuple: (np.ndarray, np.ndarray) of images and labels respectively
+
+    """
     imgs = []
     labels = []
-    for idx in indicies:
+    for idx in indices:
         img = np.array(dataset[idx][0])
         label = dataset[idx][1]
         if flatten:
             img = img.flatten()
         imgs.append(img)
         labels.append(label)
+
     return np.array(imgs), np.array(labels)
 
-def read_img_label(dataset, indicies):
+
+def read_img_label(dataset: list, indices: list) -> list:
+    """
+    Given an image dataset and a list of indices,
+    this function returns the labels from the dataset.
+
+    Arguments:
+        dataset (list): List of images.
+        indices (list): indices of `dataset` to be returned.
+
+    Returns:
+        list: Image labels.
+    """
+
     labels = []
-    for idx in indicies:
+    for idx in indices:
         label = dataset[idx][1]
         labels.append(label)
     return labels
 
-def pick_n_sample_from_each_class(fn, n, idx_only=False):
+
+def pick_n_sample_from_each_class(
+    filename: str, n_samples: int, idx_only: bool = False
+) -> tuple:
+    """
+    Grabs a random sample of size `n_samples` for each label from the csv file
+    at `filename`.
+
+    Arguments:
+        filename (str): Relative path to the file you want to load.
+        n_samples (int): Number of samples to load and return for each label.
+        idx_only (bool): True if you only want to return the indices of the rows
+                         to load.
+
+    Returns:
+        list | tuple: List if idx_only, else tuple of samples and labels.
+
+    """
+
     label2text = defaultdict(list)
     label2idx = defaultdict(list)
     class2count = {}
     result = []
     labels = []
     recorded_idx = []
-    with open(fn) as fo:
-        reader = csv.reader(fo, delimiter=',', quotechar='"')
-        for i, row in enumerate(reader):
-            label, title, desc = row[0], row[1], row[2]
-            text = '. '.join([title, desc])
-            label2text[label].append(text)
-            label2idx[label].append(i)
-        for cl in label2text:
-            class2count[cl] = len(label2text[cl])
+
+    data = _load_csv_filepath(filename)
+    for i, (label, title, description) in enumerate(data):
+        text = ". ".join([title, description])
+        label2text[label].append(text)
+        label2idx[label].append(i)
+
+    for class_ in label2text:
+        class2count[class_] = len(label2text[class_])
+
     for c in class2count:
-        select_idx = np.random.choice(class2count[c], size=n, replace=False)
+        select_idx = np.random.choice(class2count[c], size=n_samples, replace=False)
         select_text = np.array(label2text[c])[select_idx]
         select_text_idx = np.array(label2idx[c])[select_idx]
         recorded_idx += list(select_text_idx)
-        result+=list(select_text)
-        labels+=[c]*n
-    print(len(result))
+        result += list(select_text)
+        labels += [c] * n_samples
+
     if idx_only:
         return recorded_idx
-    else:
-        return result, labels
 
-def pick_n_sample_from_each_class_given_dataset(ds, n, output_fn, index_only=False):
+    return result, labels
+
+
+def pick_n_sample_from_each_class_given_dataset(
+    dataset: list, n_samples: int, output_filename: str = None, index_only: bool = False
+) -> tuple:
+    """
+    Grabs a random sample of size `n_samples` for each label from the dataset
+    `dataset`.
+
+    Arguments:
+        dataset (list): Relative path to the file you want to load.
+        n_samples (int): Number of samples to load and return for each label.
+        output_filename (str): [Optional] Where to save the recorded indices.
+        index_only (bool): True if you only want to return the indices of the rows
+                           to load.
+
+    Returns:
+        list | tuple: List if idx_only, else tuple of samples and labels.
+    """
+
     label2text = defaultdict(list)
     label2idx = defaultdict(list)
     class2count = {}
     result = []
     labels = []
     recorded_idx = []
-    for i, (label, text) in enumerate(ds):
+
+    for i, (label, text) in enumerate(dataset):
         label2text[label].append(text)
         label2idx[label].append(i)
+
     for cl in label2text:
         class2count[cl] = len(label2text[cl])
+
     for c in class2count:
-        select_idx = np.random.choice(class2count[c], size=n, replace=False)
+        select_idx = np.random.choice(class2count[c], size=n_samples, replace=False)
         select_text = np.array(label2text[c])[select_idx]
         select_text_idx = np.array(label2idx[c])[select_idx]
-        recorded_idx+=list(select_text_idx)
-        result+=list(select_text)
-        labels+=[c]*n
-    print(len(result))
-    if output_fn is not None:
-        np.save(output_fn, np.array(recorded_idx))
+        recorded_idx += list(select_text_idx)
+        result += list(select_text)
+        labels += [c] * n_samples
+
+    if output_filename is not None:
+        np.save(output_filename, np.array(recorded_idx))
+
     if index_only:
         return np.array(recorded_idx), labels
     return result, labels
 
 
-def pick_n_sample_from_each_class_img(dataset, n, prefix='train', flatten=False):
+def pick_n_sample_from_each_class_img(
+    dataset: list, n_samples: int, flatten: bool = False
+) -> tuple:
+    """
+    Grabs a random sample of size `n_samples` for each label from the dataset
+    `dataset`.
+
+    Arguments:
+        dataset (list): Relative path to the file you want to load.
+        n_samples (int): Number of samples to load and return for each label.
+        flatten (bool): True if you want to flatten the images.
+
+    Returns:
+        tuple: Tuple of samples, labels, and the recorded indices.
+    """
+
     label2img = defaultdict(list)
     label2idx = defaultdict(list)
     class2count = {}
     result = []
     labels = []
-    recorded_idx = [] #for replication
-    for i,pair in enumerate(dataset):
+    recorded_idx = []  # for replication
+    for i, pair in enumerate(dataset):
         img, label = pair
         if flatten:
             img = np.array(img).flatten()
         label2img[label].append(img)
         label2idx[label].append(i)
+
     for cl in label2img:
         class2count[cl] = len(label2img[cl])
+
     for c in class2count:
-        select_idx = np.random.choice(class2count[c], size=n, replace=False)
+        select_idx = np.random.choice(class2count[c], size=n_samples, replace=False)
         select_img = np.array(label2img[c])[select_idx]
         select_img_idx = np.array(label2idx[c])[select_idx]
-        recorded_idx+=list(select_img_idx)
-        result+=list(select_img)
-        labels+=[c]*n
-    print(len(result))
-    print(recorded_idx)
+        recorded_idx += list(select_img_idx)
+        result += list(select_img)
+        labels += [c] * n_samples
     return result, labels, recorded_idx
+
 
 def load_custom_dataset(di, delimiter='\t'):
     def process(fn):

@@ -4,16 +4,13 @@ This paper is accepted to Findings of [ACL2023](https://aclanthology.org/2023.fi
 
 ### Require
 
+See `requirements.txt`.
+
+Install requirements in a clean environment:
 ```
-torch
-torchdata
-torchtext==0.11 (for dataset)
-numpy
-pathos (if need multiprocessing)
-scikit-learn
-tqdm
-unidecode
-datasets
+conda create -n npc python=3.7
+conda activate npc
+pip install -r requirements.txt
 ```
 
 ### Run
@@ -35,7 +32,7 @@ By default, this will only use 100 test and training samples per class as a quic
 --test_idx_start <INT>
 --test_idx_end <INT> [These two args help us to run on a certain range of test set. Also helpful for calculating the distance matrix on the whole dataset.]
 --para [This will use multiprocessing to accelerate.]
---output_dir <DIR> [The output directory to save information of tested indicies or distance matrix.]
+--output_dir <DIR> [The output directory to save information of tested indices or distance matrix.]
 
 ```
 
@@ -53,3 +50,4 @@ to calculate accuracy. Otherwise, the accuracy will be calculated automatically 
 You can use your own custom dataset by passing whatever string to `--dataset`, and also remember to pass the data directory that contains `train.txt` and `test.txt` to `--data_dir`.
 Both `train.txt` and `test.txt` are expected to have the format `{label}\t{text}` per line.
 You can change the delimiter according to you dataset by changing `delimiter` in `load_custom_dataset()` in `data.py`.
+
