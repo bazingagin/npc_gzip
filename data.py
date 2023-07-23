@@ -313,6 +313,8 @@ def load_swahili() -> tuple:
 
 
 def load_filipino():
+    """deprecated - datasets on huggingface have overlapped train&test"""
+    def process(ds):
     """
     Loads the Dengue Filipino dataset
 
@@ -522,5 +524,18 @@ def pick_n_sample_from_each_class_img(
         recorded_idx += list(select_img_idx)
         result += list(select_img)
         labels += [c] * n_samples
-
     return result, labels, recorded_idx
+
+
+def load_custom_dataset(di, delimiter='\t'):
+    def process(fn):
+        l = []
+        text_list = open(fn).read().strip().split('\n')
+        for t in text_list:
+            label, text = t.split(delimiter)
+            l.append((label,text))
+        return l
+    test_fn = os.path.join(di, 'test.txt')
+    train_fn = os.path.join(di, 'train.txt')
+    train_ds, test_ds = process(train_fn), process(test_fn)
+    return train_ds, test_ds

@@ -44,3 +44,10 @@ If we want to calculate accuracy from recorded distance file <DISTANCE DIR>, use
 python main_text.py --record --score --distance_fn <DISTANCE DIR> 
 ```
 to calculate accuracy. Otherwise, the accuracy will be calculated automatically using the command in the last section.
+
+### Use Custom Dataset
+
+You can use your own custom dataset by passing whatever string to `--dataset`, and also remember to pass the data directory that contains `train.txt` and `test.txt` to `--data_dir`.
+Both `train.txt` and `test.txt` are expected to have the format `{label}\t{text}` per line.
+You can change the delimiter according to you dataset by changing `delimiter` in `load_custom_dataset()` in `data.py`.
+
