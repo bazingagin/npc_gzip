@@ -27,11 +27,11 @@ def CDM(c1: float, c2: float, c12: float) -> float:
     return dis
 
 
-def MSE(v1: float, v2: float) ->float:
+def MSE(v1: float, v2: float) -> float:
     """
     Calculates Mean Squared Error.
     """
-    
+
     return np.sum((v1 - v2) ** 2) / len(v1)
 
 
@@ -59,7 +59,7 @@ def agg_by_jag_word(t1: str, t2: str) -> str:
         t2 (str): Second item.
 
     Returns:
-        str: 
+        str:
     """
 
     t1_list = t1.split(" ")
@@ -85,7 +85,7 @@ def agg_by_jag_char(t1: str, t2: str):
         t2 (str): Second item.
 
     Returns:
-        str: 
+        str:
     """
 
     t1_list = list(t1)
@@ -109,7 +109,7 @@ def aggregate_strings(stringa: str, stringb: str, by_character: bool = False) ->
         stringa (str): First item.
         stringb (str): Second item.
         by_character (bool): True if you want to join the combined string by character,
-                             Else combines by word 
+                             Else combines by word
 
     Returns:
         str: combination of stringa and stringb
@@ -129,6 +129,7 @@ def aggregate_strings(stringa: str, stringb: str, by_character: bool = False) ->
         return "".join(combined)
     return " ".join(combined)
 
+
 def agg_by_avg(i1: list, i2: list) -> torch.Tensor:
     """
     Calculates the average of i1 and i2 rounding to the
@@ -137,7 +138,7 @@ def agg_by_avg(i1: list, i2: list) -> torch.Tensor:
     Arguments:
         i1 (list): List 1.
         i2 (list): List 2.
-    
+
     Returns:
         torch.Tensor: Average of the two lists.
     """
@@ -145,7 +146,9 @@ def agg_by_avg(i1: list, i2: list) -> torch.Tensor:
     return torch.div(i1 + i2, 2, rounding_mode="trunc")
 
 
-def agg_by_min_or_max(i1: list, i2: list, aggregate_by_minimum: bool = False) -> torch.Tensor:
+def agg_by_min_or_max(
+    i1: list, i2: list, aggregate_by_minimum: bool = False
+) -> torch.Tensor:
     """
     Calculates the average of i1 and i2 rounding to the
     shortest list.
@@ -155,37 +158,37 @@ def agg_by_min_or_max(i1: list, i2: list, aggregate_by_minimum: bool = False) ->
         i2 (list): List 2.
         aggregate_by_minimum (bool): True if you want to take the minimum of the two lists.
                                      False if you want to take the maximum instead.
-    
+
     Returns:
         torch.Tensor: Average of the two lists.
     """
-    
+
     stacked = torch.stack([i1, i2], axis=0)
     if aggregate_by_minimum:
         return torch.min(stacked, axis=0)[0]
-    
+
     return torch.max(stacked, axis=0)[0]
 
 
 def agg_by_stack(i1: list, i2: list) -> torch.Tensor:
     """
     Combines `i1` and `i2` via `torch.stack`.
-    
+
     Arguments:
         i1 (list): List 1.
         i2 (list): List 2.
-    
+
     Returns:
         torch.Tensor: Stack of the two lists.
     """
-    
+
     return torch.stack([i1, i2])
 
 
 def mean_confidence_interval(data: list, confidence: float = 0.95) -> tuple:
     """
     Computes the mean confidence interval of `data` with `confidence`
-    
+
     Arguments:
         data (list): List of data to compute a confidence interval over.
         confidence (float): Level to compute confidence.

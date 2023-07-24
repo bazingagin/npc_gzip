@@ -321,6 +321,7 @@ def load_filipino():
     Returns:
         tuple: Tuple of lists containing the training and testing datasets respectively.
     """
+
     def process(dataset: list) -> list:
         label_dict = OrderedDict()
         d = {"absent": 0, "dengue": 1, "health": 2, "mosquito": 3, "sick": 4}
@@ -526,15 +527,16 @@ def pick_n_sample_from_each_class_img(
     return result, labels, recorded_idx
 
 
-def load_custom_dataset(di, delimiter='\t'):
+def load_custom_dataset(di, delimiter="\t"):
     def process(fn):
         l = []
-        text_list = open(fn).read().strip().split('\n')
+        text_list = open(fn).read().strip().split("\n")
         for t in text_list:
             label, text = t.split(delimiter)
-            l.append((label,text))
+            l.append((label, text))
         return l
-    test_fn = os.path.join(di, 'test.txt')
-    train_fn = os.path.join(di, 'train.txt')
+
+    test_fn = os.path.join(di, "test.txt")
+    train_fn = os.path.join(di, "train.txt")
     train_ds, test_ds = process(train_fn), process(test_fn)
     return train_ds, test_ds

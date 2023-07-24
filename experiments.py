@@ -9,17 +9,24 @@ from copy import deepcopy
 from functools import partial
 from itertools import repeat
 from statistics import mode
+from typing import Callable
 
 import numpy as np
 import torch
-from sklearn.metrics.cluster import adjusted_rand_score, normalized_mutual_info_score
+from sklearn.metrics.cluster import (adjusted_rand_score,
+                                     normalized_mutual_info_score)
 from tqdm import tqdm
 
-from typing import Callable
 from compressors import DefaultCompressor
 
+
 class KnnExpText:
-    def __init__(self, aggregation_function: Callable, compressor: DefaultCompressor, distance_function: Callable):
+    def __init__(
+        self,
+        aggregation_function: Callable,
+        compressor: DefaultCompressor,
+        distance_function: Callable,
+    ):
         self.aggregation_func = aggregation_function
         self.compressor = compressor
         self.distance_func = distance_function
@@ -81,7 +88,7 @@ class KnnExpText:
         Returns:
             None: None
         """
-        
+
         data_to_compare = data
         if train_data is not None:
             data_to_compare = train_data
@@ -106,7 +113,7 @@ class KnnExpText:
 
     def calc_dis_single(self, t1: str, t2: str) -> float:
         """
-        Calculates the distance between `t1` and `t2` and returns 
+        Calculates the distance between `t1` and `t2` and returns
         that distance value as a float-like object.
 
         Arguments:
@@ -127,7 +134,7 @@ class KnnExpText:
 
     def calc_dis_single_multi(self, train_data: list, datum: str) -> list:
         """
-        Calculates the distance between `train_data` and `datum` and returns 
+        Calculates the distance between `train_data` and `datum` and returns
         that distance value as a float-like object.
 
         Arguments:
@@ -151,7 +158,7 @@ class KnnExpText:
 
     def calc_dis_with_vector(self, data: list, train_data: list = None):
         """
-        Calculates the distance between `train_data` and `data` and returns 
+        Calculates the distance between `train_data` and `data` and returns
         that distance value as a float-like object.
 
         Arguments:
@@ -174,7 +181,12 @@ class KnnExpText:
             self.distance_matrix.append(distance4i)
 
     def calc_acc(
-        self, k: int, label: str, train_label: str = None, provided_distance_matrix: list = None, rand: bool = False
+        self,
+        k: int,
+        label: str,
+        train_label: str = None,
+        provided_distance_matrix: list = None,
+        rand: bool = False,
     ) -> tuple:
         """
         Calculates the accuracy of the algorithm.
@@ -187,7 +199,7 @@ class KnnExpText:
             rand (bool): TODO
 
         Returns:
-            tuple: predictions, and list of bools indicating prediction correctness. 
+            tuple: predictions, and list of bools indicating prediction correctness.
 
         """
         if provided_distance_matrix is not None:
@@ -233,7 +245,14 @@ class KnnExpText:
         print("Accuracy is {}".format(sum(correct) / len(correct)))
         return pred, correct
 
-    def combine_dis_acc(self, k: int, data: list, label: str, train_data: list = None, train_label: str = None) -> tuple:
+    def combine_dis_acc(
+        self,
+        k: int,
+        data: list,
+        label: str,
+        train_data: list = None,
+        train_label: str = None,
+    ) -> tuple:
         correct = []
         pred = []
         if train_label is not None:
@@ -272,7 +291,9 @@ class KnnExpText:
         print("Accuracy is {}".format(sum(correct) / len(correct)))
         return pred, correct
 
-    def combine_dis_acc_single(self, k: int, train_data: list, train_label: str, datum: list, label: str):
+    def combine_dis_acc_single(
+        self, k: int, train_data: list, train_label: str, datum: list, label: str
+    ):
         # Support multi processing - must provide train data and train label
         distance4i = self.calc_dis_single_multi(train_data, datum)
         sorted_idx = np.argpartition(np.array(distance4i), range(k))

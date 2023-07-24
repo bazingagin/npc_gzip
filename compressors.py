@@ -1,14 +1,13 @@
 # Compressor Framework
+import io
 import sys
 from importlib import import_module
-from tqdm import tqdm
-import torch.nn.functional as F
-import io
 
 
 class DefaultCompressor:
     """for non-neural-based compressor"""
-    def __init__(self, compressor, typ='text'):
+
+    def __init__(self, compressor, typ="text"):
         try:
             self.compressor = import_module(compressor)
         except ModuleNotFoundError:
@@ -38,6 +37,6 @@ class DefaultCompressor:
 
 
 """Test Compressors"""
-if __name__ == '__main__':
-    comp = DefaultCompressor('gzip')
-    print(comp.get_compressed_len('Hello world'))
+if __name__ == "__main__":
+    comp = DefaultCompressor("gzip")
+    print(comp.get_compressed_len("Hello world"))

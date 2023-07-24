@@ -1,23 +1,16 @@
 import argparse
 import time
 from functools import partial
+from typing import Callable
 
 from pathos.multiprocessing import ProcessingPool as Pool
-from torchtext.datasets import (
-    AG_NEWS,
-    IMDB,
-    AmazonReviewPolarity,
-    DBpedia,
-    SogouNews,
-    YahooAnswers,
-    YelpReviewPolarity,
-)
+from torchtext.datasets import (AG_NEWS, IMDB, AmazonReviewPolarity, DBpedia,
+                                SogouNews, YahooAnswers, YelpReviewPolarity)
 
 from compressors import *
 from data import *
 from experiments import *
 from utils import *
-from typing import Callable
 
 # np.random.seed(6)
 
@@ -146,7 +139,7 @@ if __name__ == "__main__":
         "swahili": 6,
         "filipino": 5,
         "kirnews": 14,
-        "custom": args.class_num
+        "custom": args.class_num,
     }
     # load dataset
     data_dir = os.path.join(args.data_dir, args.dataset)
@@ -244,11 +237,7 @@ if __name__ == "__main__":
             else:
                 start_idx = args.test_idx_start
             for i in range(0, len(test_data), 100):
-                print(
-                    "from {} to {}".format(
-                        start_idx + i, start_idx + i + 100
-                    )
-                )
+                print("from {} to {}".format(start_idx + i, start_idx + i + 100))
                 output_rel_fn = "test_dis_idx_from_{}_to_{}".format(
                     start_idx + i, start_idx + i + 100
                 )
