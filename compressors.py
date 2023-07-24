@@ -5,6 +5,7 @@ from tqdm import tqdm
 import torch.nn.functional as F
 import io
 
+
 class DefaultCompressor:
     """for non-neural-based compressor"""
     def __init__(self, compressor, typ='text'):
@@ -28,6 +29,13 @@ class DefaultCompressor:
         """
         Returns the compressed size of the original function
         in bits.
+
+        """
+        with open(original_fn) as fo:
+            data = fo.read()
+            compressed_str = self.compressor.compress(data.encode("utf-8"))
+            return len(compressed_str) * 8 / len(data)
+
 
 """Test Compressors"""
 if __name__ == '__main__':
