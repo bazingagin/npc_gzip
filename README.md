@@ -47,7 +47,9 @@ to calculate accuracy. Otherwise, the accuracy will be calculated automatically 
 
 ### Use Custom Dataset
 
-You can use your own custom dataset by passing whatever string to `--dataset`, and also remember to pass the data directory that contains `train.txt` and `test.txt` to `--data_dir`.
+You can use your own custom dataset by passing `custom` to `--dataset`; pass the data directory that contains `train.txt` and `test.txt` to `--data_dir`; pass the class number to the `--class_num`.
+
 Both `train.txt` and `test.txt` are expected to have the format `{label}\t{text}` per line.
+
 You can change the delimiter according to you dataset by changing `delimiter` in `load_custom_dataset()` in `data.py`.
 
