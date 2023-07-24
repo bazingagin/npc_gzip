@@ -83,7 +83,7 @@ def record_distance(
         del distance_for_selected_test
     else:
         knn_exp.calc_dis(test_data, train_data=train_data)
-        np.save(out_fn, np.array(knn_exp.dis_matrix))
+        np.save(out_fn, np.array(knn_exp.distance_matrix))
     print("spent: {}".format(time.time() - start))
 
 
