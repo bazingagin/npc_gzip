@@ -29,7 +29,7 @@ class DefaultCompressor:
         Returns the compressed size of the original function
         in bits.
 
-"""Test Compressors"""
+        Test Compressors"""
 if __name__ == '__main__':
     comp = DefaultCompressor('gzip')
     print(comp.get_compressed_len('Hello world'))

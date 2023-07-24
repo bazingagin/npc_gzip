@@ -315,12 +315,12 @@ def load_swahili() -> tuple:
 def load_filipino():
     """deprecated - datasets on huggingface have overlapped train&test"""
     def process(ds):
-    """
-    Loads the Dengue Filipino dataset
+        """
+        Loads the Dengue Filipino dataset
 
-    Returns:
-        tuple: Tuple of lists containing the training and testing datasets respectively.
-    """
+        Returns:
+            tuple: Tuple of lists containing the training and testing datasets respectively.
+        """
 
     def process(dataset: list) -> list:
         label_dict = OrderedDict()
