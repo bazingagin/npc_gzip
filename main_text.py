@@ -118,6 +118,7 @@ if __name__ == "__main__":
     parser.add_argument("--distance_fn", default=None)
     parser.add_argument("--score", action="store_true", default=False)
     parser.add_argument("--k", default=2, type=int)
+    parser.add_argument("--class_num", default=5, type=int)
     args = parser.parse_args()
     # create output dir
     if not os.path.exists(args.output_dir):
@@ -145,6 +146,7 @@ if __name__ == "__main__":
         "swahili": 6,
         "filipino": 5,
         "kirnews": 14,
+        "custom": args.class_num
     }
     # load dataset
     data_dir = os.path.join(args.data_dir, args.dataset)
@@ -158,6 +160,7 @@ if __name__ == "__main__":
         "swahili",
         "filipino",
         "kirnews",
+        "custom",
     ]:
         dataset_pair = eval(args.dataset)(root=args.data_dir)
     else:
