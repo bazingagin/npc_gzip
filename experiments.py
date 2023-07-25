@@ -9,7 +9,7 @@ from copy import deepcopy
 from functools import partial
 from itertools import repeat
 from statistics import mode
-from typing import Callable
+from typing import Any, Callable, Optional
 
 import numpy as np
 import torch
@@ -26,13 +26,15 @@ class KnnExpText:
         aggregation_function: Callable,
         compressor: DefaultCompressor,
         distance_function: Callable,
-    ):
+    ) -> None:
         self.aggregation_func = aggregation_function
         self.compressor = compressor
         self.distance_func = distance_function
-        self.distance_matrix = []
+        self.distance_matrix: list = []
 
-    def calc_dis(self, data: list, train_data: list = None, fast: bool = False) -> None:
+    def calc_dis(
+        self, data: list, train_data: Optional[list] = None, fast: bool = False
+    ) -> None:
         """
         Calculates the distance between either `data` and itself or `data` and `train_data`
         and appends the distance to `self.distance_matrix`.
@@ -74,7 +76,7 @@ class KnnExpText:
             self.distance_matrix.append(distance4i)
 
     def calc_dis_with_single_compressed_given(
-        self, data: list, data_len: list = None, train_data: list = None
+        self, data: list, data_len: list = None, train_data: Optional[list] = None
     ) -> None:
         """
         Calculates the distance between either `data`, `data_len`, or `train_data`
@@ -156,7 +158,7 @@ class KnnExpText:
             distance4i.append(distance)
         return distance4i
 
-    def calc_dis_with_vector(self, data: list, train_data: list = None):
+    def calc_dis_with_vector(self, data: list, train_data: Optional[list] = None):
         """
         Calculates the distance between `train_data` and `data` and returns
         that distance value as a float-like object.
@@ -183,9 +185,9 @@ class KnnExpText:
     def calc_acc(
         self,
         k: int,
-        label: str,
-        train_label: str = None,
-        provided_distance_matrix: list = None,
+        label: list,
+        train_label: Optional[list] = None,
+        provided_distance_matrix: Optional[list] = None,
         rand: bool = False,
     ) -> tuple:
         """
@@ -193,8 +195,8 @@ class KnnExpText:
 
         Arguments:
             k (int?): TODO
-            label (str): Predicted Label.
-            train_label (str): Correct Label.
+            label (list): Predicted Labels.
+            train_label (list): Correct Labels.
             provided_distance_matrix (list): Calculated Distance Matrix to use instead of `self.distance_matrix`.
             rand (bool): TODO
 
@@ -249,9 +251,9 @@ class KnnExpText:
         self,
         k: int,
         data: list,
-        label: str,
-        train_data: list = None,
-        train_label: str = None,
+        label: list,
+        train_data: Optional[list] = None,
+        train_label: Optional[list] = None,
     ) -> tuple:
         correct = []
         pred = []
@@ -292,8 +294,13 @@ class KnnExpText:
         return pred, correct
 
     def combine_dis_acc_single(
-        self, k: int, train_data: list, train_label: str, datum: list, label: str
-    ):
+        self,
+        k: int,
+        train_data: list,
+        train_label: list,
+        datum: str,
+        label: Any,  # int, as used in this application
+    ) -> tuple:
         # Support multi processing - must provide train data and train label
         distance4i = self.calc_dis_single_multi(train_data, datum)
         sorted_idx = np.argpartition(np.array(distance4i), range(k))
