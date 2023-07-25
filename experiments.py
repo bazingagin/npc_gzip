@@ -9,23 +9,29 @@ from copy import deepcopy
 from functools import partial
 from itertools import repeat
 from statistics import mode
+from typing import Any, Callable, Optional
 
 import numpy as np
 import torch
 from sklearn.metrics.cluster import adjusted_rand_score, normalized_mutual_info_score
 from tqdm import tqdm
 
-from typing import Callable
 from compressors import DefaultCompressor
 
+
 class KnnExpText:
-    def __init__(self, aggregation_function: Callable, compressor: DefaultCompressor, distance_function: Callable):
+    def __init__(
+        self,
+        aggregation_function: Callable,
+        compressor: DefaultCompressor,
+        distance_function: Callable,
+    ) -> None:
         self.aggregation_func = aggregation_function
         self.compressor = compressor
         self.distance_func = distance_function
-        self.distance_matrix = []
+        self.distance_matrix: list = []
 
-    def calc_dis(self, data: list, train_data: list = None, fast: bool = False) -> None:
+    def calc_dis(self, data: list, train_data: Optional[list] = None, fast: bool = False) -> None:
         """
         Calculates the distance between either `data` and itself or `data` and `train_data`
         and appends the distance to `self.distance_matrix`.
@@ -67,7 +73,7 @@ class KnnExpText:
             self.distance_matrix.append(distance4i)
 
     def calc_dis_with_single_compressed_given(
-        self, data: list, data_len: list = None, train_data: list = None
+        self, data: list, data_len: list = None, train_data: Optional[list] = None
     ) -> None:
         """
         Calculates the distance between either `data`, `data_len`, or `train_data`
@@ -81,7 +87,7 @@ class KnnExpText:
         Returns:
             None: None
         """
-        
+
         data_to_compare = data
         if train_data is not None:
             data_to_compare = train_data
@@ -106,7 +112,7 @@ class KnnExpText:
 
     def calc_dis_single(self, t1: str, t2: str) -> float:
         """
-        Calculates the distance between `t1` and `t2` and returns 
+        Calculates the distance between `t1` and `t2` and returns
         that distance value as a float-like object.
 
         Arguments:
@@ -127,7 +133,7 @@ class KnnExpText:
 
     def calc_dis_single_multi(self, train_data: list, datum: str) -> list:
         """
-        Calculates the distance between `train_data` and `datum` and returns 
+        Calculates the distance between `train_data` and `datum` and returns
         that distance value as a float-like object.
 
         Arguments:
@@ -149,9 +155,9 @@ class KnnExpText:
             distance4i.append(distance)
         return distance4i
 
-    def calc_dis_with_vector(self, data: list, train_data: list = None):
+    def calc_dis_with_vector(self, data: list, train_data: Optional[list] = None):
         """
-        Calculates the distance between `train_data` and `data` and returns 
+        Calculates the distance between `train_data` and `data` and returns
         that distance value as a float-like object.
 
         Arguments:
@@ -174,20 +180,25 @@ class KnnExpText:
             self.distance_matrix.append(distance4i)
 
     def calc_acc(
-        self, k: int, label: str, train_label: str = None, provided_distance_matrix: list = None, rand: bool = False
+        self,
+        k: int,
+        label: list,
+        train_label: Optional[list] = None,
+        provided_distance_matrix: Optional[list] = None,
+        rand: bool = False,
     ) -> tuple:
         """
         Calculates the accuracy of the algorithm.
 
         Arguments:
             k (int?): TODO
-            label (str): Predicted Label.
-            train_label (str): Correct Label.
+            label (list): Predicted Labels.
+            train_label (list): Correct Labels.
             provided_distance_matrix (list): Calculated Distance Matrix to use instead of `self.distance_matrix`.
             rand (bool): TODO
 
         Returns:
-            tuple: predictions, and list of bools indicating prediction correctness. 
+            tuple: predictions, and list of bools indicating prediction correctness.
 
         """
         if provided_distance_matrix is not None:
@@ -233,7 +244,14 @@ class KnnExpText:
         print("Accuracy is {}".format(sum(correct) / len(correct)))
         return pred, correct
 
-    def combine_dis_acc(self, k: int, data: list, label: str, train_data: list = None, train_label: str = None) -> tuple:
+    def combine_dis_acc(
+        self,
+        k: int,
+        data: list,
+        label: list,
+        train_data: Optional[list] = None,
+        train_label: Optional[list] = None,
+    ) -> tuple:
         correct = []
         pred = []
         if train_label is not None:
@@ -272,7 +290,14 @@ class KnnExpText:
         print("Accuracy is {}".format(sum(correct) / len(correct)))
         return pred, correct
 
-    def combine_dis_acc_single(self, k: int, train_data: list, train_label: str, datum: list, label: str):
+    def combine_dis_acc_single(
+        self,
+        k: int,
+        train_data: list,
+        train_label: list,
+        datum: str,
+        label: Any,  # int, as used in this application
+    ) -> tuple:
         # Support multi processing - must provide train data and train label
         distance4i = self.calc_dis_single_multi(train_data, datum)
         sorted_idx = np.argpartition(np.array(distance4i), range(k))

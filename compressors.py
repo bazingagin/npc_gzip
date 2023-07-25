@@ -1,9 +1,11 @@
 # Compressor Framework
+import io
 import sys
 from importlib import import_module
-from tqdm import tqdm
+
+import numpy as np
 import torch.nn.functional as F
-import io
+from tqdm import tqdm
 
 
 class DefaultCompressor:
