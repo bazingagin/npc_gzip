@@ -1,7 +1,8 @@
 # Compressor Framework
-import io
-import sys
+
 from importlib import import_module
+
+import numpy as np
 
 
 class DefaultCompressor:
