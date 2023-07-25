@@ -33,3 +33,13 @@ class MissingDependencyException(Exception):
 
         '''
         super().__init__(self.message)
+
+class StringTooShortException(Exception):
+    def __init__(self, stringa: str, stringb: str, function_name: str):
+        self.message = f'''
+        Unable to aggregate ({stringa}) and ({stringb}) using
+        function: ({function_name}). One or both of the two
+        strings are too short to concatenate.
+        
+        '''
+        super().__init__(self.message)
