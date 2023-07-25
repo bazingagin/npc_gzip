@@ -25,7 +25,7 @@ class DefaultCompressor:
         else:
             return len(self.compressor.compress(np.array(x).tobytes()))
 
-    def get_bits_per_char(self, original_fn: str) -> float:
+    def get_bits_per_character(self, original_fn: str) -> float:
         """
         Returns the compressed size of the original function
         in bits.

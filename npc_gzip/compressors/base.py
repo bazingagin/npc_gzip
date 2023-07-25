@@ -43,7 +43,7 @@ class BaseCompressor:
         compressed_length: int = len(compressed_value)
         return compressed_length
 
-    def get_bits_per_char(self, x: str) -> float:
+    def get_bits_per_character(self, x: str) -> float:
         """
         Returns the compressed size of `x` relative to 
         the number of characters in string `x`.
@@ -73,6 +73,6 @@ if __name__ == "__main__":
 
     example = 'Hello there!'
     compressed_length: int = compressor.get_compressed_length(example)
-    bits_per_character: float = compressor.get_bits_per_char(example)
+    bits_per_character: float = compressor.get_bits_per_character(example)
 
     print(compressed_length, bits_per_character)

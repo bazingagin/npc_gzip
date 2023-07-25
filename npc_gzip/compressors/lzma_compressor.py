@@ -26,4 +26,4 @@ if __name__ == '__main__':
     compressor = LzmaCompressor()
     example: str = 'Hello there!'
     compressed_length: int = compressor.get_compressed_length(example)
-    bits_per_character: float = compressor.get_bits_per_char(example)
+    bits_per_character: float = compressor.get_bits_per_character(example)
