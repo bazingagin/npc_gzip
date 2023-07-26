@@ -3,7 +3,6 @@ from typing import Union
 import numpy as np
 
 from npc_gzip.exceptions import (
-    AllOrNoneException,
     CompressedValuesEqualZero,
     InvalidShapeException,
 )
@@ -32,19 +31,21 @@ class Distance:
 
         if (
             compressed_values_a.shape
-            != compressed_values_b.shape
-            != compressed_values_ab.shape
+            == compressed_values_b.shape
+            == compressed_values_ab.shape
         ):
+            
+
+            self.compressed_values_a = compressed_values_a
+            self.compressed_values_b = compressed_values_b
+            self.compressed_values_ab = compressed_values_ab
+        else:
             raise InvalidShapeException(
                 compressed_values_a,
                 compressed_values_b,
                 compressed_values_ab,
                 function_name="Distance.__init__",
             )
-
-        self.compressed_values_a = compressed_values_a
-        self.compressed_values_b = compressed_values_b
-        self.compressed_values_ab = compressed_values_ab
 
     def _ncd(
         self,
@@ -86,7 +87,7 @@ class Distance:
         compressed_value_a: float,
         compressed_value_b: float,
         compressed_value_ab: float,
-    ):
+    ) -> float:
         denominator = compressed_value_ab
         if denominator == 0:
             raise CompressedValuesEqualZero(
@@ -197,7 +198,7 @@ if __name__ == "__main__":
     a = np.random.rand(3, 10)
     b = np.random.rand(3, 10)
     ab = np.random.rand(3, 10)
-    
+
     distance = Distance(a, b, ab)
 
     ncd = distance.ncd
