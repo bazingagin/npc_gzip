@@ -2,12 +2,12 @@ from npc_gzip.compressors.base import BaseCompressor
 from npc_gzip.exceptions import MissingDependencyException
 
 
-class LzmaCompressor(BaseCompressor):
+class Bz2Compressor(BaseCompressor):
     def __init__(self):
         super().__init__(self)
 
         try:
-            import lzma
+            import bz2
         except ModuleNotFoundError as e:
             import platform
 
@@ -17,12 +17,12 @@ class LzmaCompressor(BaseCompressor):
             else:
                 raise MissingDependencyException("bz2")
 
-        self.compressor = lzma
+        self.compressor = bz2
 
 
 if __name__ == "__main__":
 
-    compressor = LzmaCompressor()
+    compressor = Bz2Compressor()
     example: str = "Hello there!"
     compressed_length: int = compressor.get_compressed_length(example)
     bits_per_character: float = compressor.get_bits_per_character(example)
