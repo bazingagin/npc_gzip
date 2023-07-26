@@ -7,8 +7,18 @@ import torch
 
 def NCD(c1: float, c2: float, c12: float) -> float:
     """
-    Calculates Normalized Compression Distance.
+    Calculates Normalized Compression Distance (NCD).
 
+    Arguments:
+        c1 (float): The compressed length of the first object.
+        c2 (float): The compressed length of the second object.
+        c12 (float): The compressed length of the concatenation of the first and second objects.
+
+    Returns:
+        float: The Normalized Compression Distance c1 and c2.
+
+    Formula:
+        NCD(c1, c2, c12) = (c12 - min(c1, c2)) / max(c1, c2)
     """
 
     distance = (c12 - min(c1, c2)) / max(c1, c2)
@@ -16,14 +26,38 @@ def NCD(c1: float, c2: float, c12: float) -> float:
 
 
 def CLM(c1, c2, c12):
+    """
+    Calculates Compression-based Length Measure (CLM).
+
+    Arguments:
+        c1: The compressed length of the first object.
+        c2: The compressed length of the second object.
+        c12: The compressed length of the concatenation of the first and second objects.
+
+    Returns:
+        float: The Compression-based Length Measure value between c1 and c2.
+
+    Formula:
+        CLM(c1, c2, c12) = 1 - (c1 + c2 - c12) / c12
+    """
     dis = 1 - (c1 + c2 - c12) / c12
     return dis
 
 
 def CDM(c1: float, c2: float, c12: float) -> float:
     """
-    Calculates Compound Dissimilarity Measure.
+    Calculates Compound Dissimilarity Measure (CDM).
 
+    Arguments:
+        c1 (float): The compressed length of the first object.
+        c2 (float): The compressed length of the second object.
+        c12 (float): The compressed length of the concatenation of the first and second objects.
+
+    Returns:
+        float: The Compound Dissimilarity Measure value between c1 and c2.
+
+    Formula:
+        CDM(c1, c2, c12) = c12 / (c1 + c2)
     """
     dis = c12 / (c1 + c2)
     return dis
@@ -31,7 +65,17 @@ def CDM(c1: float, c2: float, c12: float) -> float:
 
 def MSE(v1: np.ndarray, v2: np.ndarray) -> float:
     """
-    Calculates Mean Squared Error.
+    Calculates Mean Squared Error (MSE).
+
+    Arguments:
+        v1 (np.ndarray): The first array.
+        v2 (np.ndarray): The second array.
+
+    Returns:
+        float: The Mean Squared Error value, representing the average squared difference between v1 and v2.
+
+    Formula:
+        MSE(v1, v2) = Σ((v1 - v2) ** 2) / len(v1)
     """
 
     return np.sum((v1 - v2) ** 2) / len(v1)

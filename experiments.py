@@ -252,6 +252,19 @@ class KnnExpText:
         train_data: Optional[list] = None,
         train_label: Optional[list] = None,
     ) -> tuple:
+        """
+        Calculates the distance and the accuracy of the algorithm for data with training.
+
+        Arguments:
+            k (int?): TODO
+            data (list): Data used for predictions.
+            label (list): Predicted Labels.
+            train_data (list): Training data to compare distances.
+            train_label (list): Correct Labels.
+
+        Returns:
+            tuple: predictions, and list of bools indicating prediction correctness.
+        """
         correct = []
         pred = []
         if train_label is not None:
@@ -298,6 +311,19 @@ class KnnExpText:
         datum: str,
         label: Any,  # int, as used in this application
     ) -> tuple:
+        """
+        Calculates the distance and the accuracy of the algorithm for a single datum with training.
+
+        Arguments:
+            k (int?): TODO
+            train_data (list): Training data to compare distances.
+            train_label (list): Correct Labels.
+            datum (str): Datum used for predictions.
+            label (Any): Correct label of datum.
+
+        Returns:
+            tuple: prediction, and a bool indicating prediction correctness.
+        """
         # Support multi processing - must provide train data and train label
         distance4i = self.calc_dis_single_multi(train_data, datum)
         sorted_idx = np.argpartition(np.array(distance4i), range(k))
