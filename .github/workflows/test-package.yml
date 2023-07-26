@@ -28,7 +28,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           poetry install
-          python -m pytest --doctest-modules --junit-xml=junit/test-results-${{ matrix.python-version }}.xml          
+          python -m pytest tests/ --doctest-modules --junit-xml=junit/test-results-${{ matrix.python-version }}.xml          
 
       - name: Upload pytest test results
         uses: actions/upload-artifact@v3
