@@ -1,5 +1,7 @@
 from types import ModuleType
+
 from npc_gzip.exceptions import InvalidCompressorException
+
 
 class BaseCompressor:
     """
@@ -24,7 +26,7 @@ class BaseCompressor:
         """
 
         x = str(x)
-        x = x.encode('utf-8')
+        x = x.encode("utf-8")
         compressed = self.compressor.compress(x)
         return compressed
 
@@ -45,7 +47,7 @@ class BaseCompressor:
 
     def get_bits_per_character(self, x: str) -> float:
         """
-        Returns the compressed size of `x` relative to 
+        Returns the compressed size of `x` relative to
         the number of characters in string `x`.
 
         Arguments:
@@ -53,7 +55,7 @@ class BaseCompressor:
                      character in.
 
         Returns:
-            float: Length of `x` once compressed divided by the number of 
+            float: Length of `x` once compressed divided by the number of
                  characters in `x`.
         """
 
@@ -62,16 +64,19 @@ class BaseCompressor:
         compressed_length_in_bits: int = compressed_length * 8
         number_of_characters: int = len(x)
 
-        compressed_length_per_number_of_characters: float = compressed_length_in_bits / number_of_characters
+        compressed_length_per_number_of_characters: float = (
+            compressed_length_in_bits / number_of_characters
+        )
         return compressed_length_per_number_of_characters
 
 
 if __name__ == "__main__":
 
     import gzip
+
     compressor = BaseCompressor(compressor=gzip)
 
-    example = 'Hello there!'
+    example = "Hello there!"
     compressed_length: int = compressor.get_compressed_length(example)
     bits_per_character: float = compressor.get_bits_per_character(example)
 

@@ -4,8 +4,15 @@ from functools import partial
 from typing import Callable
 
 from pathos.multiprocessing import ProcessingPool as Pool
-from torchtext.datasets import (AG_NEWS, IMDB, AmazonReviewPolarity, DBpedia,
-                                SogouNews, YahooAnswers, YelpReviewPolarity)
+from torchtext.datasets import (
+    AG_NEWS,
+    IMDB,
+    AmazonReviewPolarity,
+    DBpedia,
+    SogouNews,
+    YahooAnswers,
+    YelpReviewPolarity,
+)
 
 from compressors import *
 from data import *

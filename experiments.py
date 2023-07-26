@@ -13,8 +13,7 @@ from typing import Any, Callable, Optional
 
 import numpy as np
 import torch
-from sklearn.metrics.cluster import (adjusted_rand_score,
-                                     normalized_mutual_info_score)
+from sklearn.metrics.cluster import adjusted_rand_score, normalized_mutual_info_score
 from tqdm import tqdm
 
 from compressors import DefaultCompressor

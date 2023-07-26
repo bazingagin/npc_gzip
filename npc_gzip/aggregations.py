@@ -1,9 +1,13 @@
-import torch
+import numpy as np
+
 from npc_gzip.exceptions import StringTooShortException
 
-def agg_by_concat_space(t1: str, t2: str) -> str:
+
+def concatenate_with_space(t1: str, t2: str) -> str:
     """
     Combines `t1` and `t2` with a space.
+
+    (formerly agg_by_concat_space)
 
     Arguments:
         t1 (str): First item.
@@ -16,62 +20,11 @@ def agg_by_concat_space(t1: str, t2: str) -> str:
     return t1 + " " + t2
 
 
-def agg_by_jag_word(t1: str, t2: str) -> str:
-    """
-    # TODO: Better description
-
-    Arguments:
-        t1 (str): First item.
-        t2 (str): Second item.
-
-    Returns:
-        str:
-    """
-
-    t1_list = t1.split(" ")
-    t2_list = t2.split(" ")
-
-    i = None
-    combined = []
-    minimum_list_size = min([len(t1_list), len(t2_list)])
-    for i in range(0, minimum_list_size - 1, 2):
-        combined.append(t1_list[i])
-        combined.append(t2_list[i + 1])
-    if i is None:
-        raise StringTooShortException(t1, t2, 'agg_by_jag_word')
-    if len(t1_list) > len(t2_list):
-        combined += t1_list[i:]
-    return " ".join(combined)
-
-
-def agg_by_jag_char(t1: str, t2: str):
-    """
-    # TODO: Better description
-
-    Arguments:
-        t1 (str): First item.
-        t2 (str): Second item.
-
-    Returns:
-        str:
-    """
-
-    t1_list = list(t1)
-    t2_list = list(t2)
-    combined = []
-    minimum_list_size = min([len(t1_list), len(t2_list)])
-    for i in range(0, minimum_list_size - 1, 2):
-        combined.append(t1_list[i])
-        combined.append(t2_list[i + 1])
-    if len(t1_list) > len(t2_list):
-        combined += t1_list[i:]
-
-    return "".join(combined)
-
-
 def aggregate_strings(stringa: str, stringb: str, by_character: bool = False) -> str:
     """
     Aggregates strings.
+
+    (replaces agg_by_jag_char, agg_by_jag_word)
 
     Arguments:
         stringa (str): First item.
@@ -87,65 +40,78 @@ def aggregate_strings(stringa: str, stringb: str, by_character: bool = False) ->
     listb = list(stringb)
     combined = []
     minimum_list_size = min([len(lista), len(listb)])
+    i = None
     for i in range(0, minimum_list_size - 1, 2):
         combined.append(lista[i])
         combined.append(listb[i + 1])
+
+    if i is None:
+        raise StringTooShortException(t1, t2, "aggregate_strings")
+
     if len(lista) > len(listb):
         combined += lista[i:]
 
     if by_character:
         return "".join(combined)
+
     return " ".join(combined)
 
 
-def agg_by_avg(i1: torch.Tensor, i2: torch.Tensor) -> torch.Tensor:
+def average(array_a: np.ndarray, array_b: np.ndarray) -> np.ndarray:
     """
-    Calculates the average of i1 and i2, rounding to the shortest.
+    Calculates the average of `array_a` and `array_b`,
+    rounding down.
+
+    (replaces agg_by_avg)
 
     Arguments:
-        i1 (torch.Tensor): First series of numbers.
-        i2 (torch.Tensor): Second series of numbers.
+        array_a (np.ndarray): First series of numbers.
+        array_b (np.ndarray): Second series of numbers.
 
     Returns:
-        torch.Tensor: Average of the two series of numbers.
+        np.ndarray: Average of the two series of numbers rounded
+                    towards zero.
     """
 
-    return torch.div(i1 + i2, 2, rounding_mode="trunc")
+    average_array = (a + b) / 2
+    average_array = average_array.astype(int)
+
+    return average_array
 
 
-def agg_by_min_or_max(
-    i1: torch.Tensor, i2: torch.Tensor, aggregate_by_minimum: bool = False
-) -> torch.Tensor:
+def min_max_aggregation(
+    array_a: np.ndarray, array_b: np.ndarray, aggregate_by_minimum: bool = False
+) -> np.ndarray:
     """
-    Calculates the average of i1 and i2, rounding to the shortest.
+    Stacks `array_a` and `array_b` then returns the minimum value if
+    `aggregate_by_minimum`, else returns the maximum value.
 
     Arguments:
-        i1 (torch.Tensor): First series of numbers.
-        i2 (torch.Tensor): Second series of numbers.
+        array_a (np.ndarray): First series of numbers.
+        array_b (np.ndarray): Second series of numbers.
         aggregate_by_minimum (bool): True if you want to take the minimum of the two series.
                                      False if you want to take the maximum instead.
 
     Returns:
-        torch.Tensor: Average of the two series.
+        np.ndarray: 1-D Numpy array of the min/max value from `array_a` & `array_b`.
     """
 
-    stacked = torch.stack([i1, i2], axis=0)
+    stacked = np.stack([array_a, array_b], axis=0)
     if aggregate_by_minimum:
-        return torch.min(stacked, axis=0)[0]
+        return np.min(stacked, axis=0).reshape(-1)
+    return torch.max(stacked, axis=0).reshape(-1)
 
-    return torch.max(stacked, axis=0)[0]
 
-
-def agg_by_stack(i1: torch.Tensor, i2: torch.Tensor) -> torch.Tensor:
+def stack(array_a: np.ndarray, array_b: np.ndarray) -> np.ndarray:
     """
-    Combines `i1` and `i2` via `torch.stack`.
+    Combines `array_a` and `array_b` via `np.stack`.
 
     Arguments:
-        i1 (torch.Tensor): First series of numbers.
-        i2 (torch.Tensor): Second series of numbers.
+        array_a (np.ndarray): First series of numbers.
+        array_b (np.ndarray): Second series of numbers.
 
     Returns:
-        torch.Tensor: Stack of the two series.
+        np.ndarray: Stack of the two series.
     """
 
-    return torch.stack([i1, i2])
+    return np.stack([array_a, array_b], axis=0)
