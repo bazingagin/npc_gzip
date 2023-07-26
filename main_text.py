@@ -90,7 +90,7 @@ def record_distance(
 def non_neurl_knn_exp_given_dis(dis_matrix, k, test_label, train_label):
     knn_exp = KnnExpText(None, None, None)
     _, correct = knn_exp.calc_acc(
-        k, test_label, train_label=train_label, provided_distance_matrix=dis_matrix
+        k, test_label, train_label=train_label, provided_distance_matrix=dis_matrix, rand=args.random
     )
     return correct
 
@@ -119,6 +119,7 @@ if __name__ == "__main__":
     parser.add_argument("--score", action="store_true", default=False)
     parser.add_argument("--k", default=2, type=int)
     parser.add_argument("--class_num", default=5, type=int)
+    parser.add_argument("--random", action="store_true", default=False)
     args = parser.parse_args()
     # create output dir
     if not os.path.exists(args.output_dir):
@@ -183,7 +184,7 @@ if __name__ == "__main__":
         elif args.dataset == "swahili":
             dataset_pair = load_swahili()
         elif args.dataset == "filipino":
-            dataset_pair = load_filipino()
+            dataset_pair = load_filipino(args.data_dir)
         else:
             dataset_pair = load_custom_dataset(args.data_dir)
     num_classes = ds2classes[args.dataset]
@@ -287,4 +288,4 @@ if __name__ == "__main__":
                 print("Altogether Accuracy is: {}".format(all_correct / total_num))
             else:
                 dis_matrix = np.load(args.distance_fn)
-                non_neurl_knn_exp_given_dis(dis_matrix, 3, test_labels, train_labels)
+                non_neurl_knn_exp_given_dis(dis_matrix, args.k, test_labels, train_labels)

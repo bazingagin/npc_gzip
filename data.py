@@ -341,6 +341,34 @@ def load_filipino() -> tuple:
     return train_ds, test_ds
 
 
+def load_filipino(data_directory):
+    """
+    Loads the Dengue Filipino dataset from local directory
+
+    :ref: https://github.com/jcblaisecruz02/Filipino-Text-Benchmarks#datasets
+
+    Arguments:
+        data_directory (str): Directory containing Dengue Filipino dataset
+    Returns:
+        tuple: Tuple of lists containing the training and testing datasets respectively.
+    """
+    def process(fn):
+        pairs = []
+        with open(fn, "r") as f:
+            reader = csv.reader(f, delimiter=",", quotechar='"')
+            for row in reader:
+                text = row[0]
+                for i in range(1, 6):
+                    if row[i] == '1':
+                        label = i-1
+                        pairs.append((label, text))
+                        break
+        return pairs
+    
+    train_ds, test_ds = process(os.path.join(data_directory, 'train.csv')), process(os.path.join(data_directory, 'test.csv'))
+    return train_ds, test_ds
+
+
 def read_img_with_label(dataset: list, indices: Sequence[int], flatten: bool = True) -> tuple:
     """
     Loads items from `dataset` based on the indices listed in `indices`
