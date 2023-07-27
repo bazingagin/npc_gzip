@@ -1,23 +1,24 @@
 import numpy as np
-
+import itertools
 from npc_gzip.exceptions import StringTooShortException
 
 
-def concatenate_with_space(t1: str, t2: str) -> str:
+def concatenate_with_space(stringa: str, stringb: str) -> str:
     """
-    Combines `t1` and `t2` with a space.
-
-    (formerly agg_by_concat_space)
+    Combines `stringa` and `stringb` with a space.
 
     Arguments:
-        t1 (str): First item.
-        t2 (str): Second item.
+        stringa (str): First item.
+        stringb (str): Second item.
 
     Returns:
-        str: `{t1} {t2}`
+        str: `{stringa} {stringb}`
     """
 
-    return t1 + " " + t2
+    stringa = str(stringa)
+    stringb = str(stringb)
+    
+    return stringa + " " + stringb
 
 
 def aggregate_strings(stringa: str, stringb: str, by_character: bool = False) -> str:
@@ -36,26 +37,22 @@ def aggregate_strings(stringa: str, stringb: str, by_character: bool = False) ->
         str: combination of stringa and stringb
     """
 
-    lista = list(stringa)
-    listb = list(stringb)
-    combined = []
-    minimum_list_size = min([len(lista), len(listb)])
-    i = None
-    for i in range(0, minimum_list_size - 1, 2):
-        combined.append(lista[i])
-        combined.append(listb[i + 1])
+    stringa = str(stringa)
+    stringb = str(stringb)
+    
+    stringa_list: list = stringa.split()
+    stringb_list: list = stringb.split()
 
-    if i is None:
-        raise StringTooShortException(t1, t2, "aggregate_strings")
-
-    if len(lista) > len(listb):
-        combined += lista[i:]
-
+    zipped_lists: list = list(zip(stringa_list, stringb_list))
+    out: list = list(
+        itertools.chain(*zipped_lists)
+    )
+    
+    aggregated: str = ' '.join(out)
     if by_character:
-        return "".join(combined)
-
-    return " ".join(combined)
-
+        aggregated: str = ''.join(out)
+        
+    return aggregated
 
 def average(array_a: np.ndarray, array_b: np.ndarray) -> np.ndarray:
     """
