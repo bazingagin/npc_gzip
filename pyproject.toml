@@ -14,6 +14,8 @@ numpy = "^1.25.1"
 [tool.poetry.group.dev.dependencies]
 black = "^23.7.0"
 isort = "^5.12.0"
+torchtext = "^0.15.2"
+portalocker = "^2.7.0"
 
 
 [tool.poetry.group.test.dependencies]
