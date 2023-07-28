@@ -1,12 +1,14 @@
-from npc_gzip.compressors.base import BaseCompressor
-from typing import Union, Sequence
+from typing import Sequence, Union
+
 import numpy as np
+
+from npc_gzip.compressors.base import BaseCompressor
+from npc_gzip.distance import Distance
 from npc_gzip.exceptions import (
     InputLabelEqualLengthException,
     InvalidObjectTypeException,
     UnsupportedDistanceMetricException,
 )
-from npc_gzip.distance import Distance
 
 
 class KnnCompressor:
@@ -41,7 +43,6 @@ class KnnCompressor:
         elif isinstance(training_inputs, np.ndarray) or isinstance(
             training_labels, np.ndarray
         ):
-
             self.training_inputs: np.ndarray = (
                 np.array(training_inputs)
                 if isinstance(training_inputs, list)
@@ -112,8 +113,7 @@ class KnnCompressor:
                                               data combined with
                                               each training sample to be scored.
         Returns:
-            np.ndarray: Numpy array of dtype=np.float32 containing the distance
-                        metric.
+            np.ndarray: Numpy array containing the distance metric.
         """
 
         distance = Distance(
@@ -165,7 +165,6 @@ class KnnCompressor:
 
         combined: list = []
         for training_sample in self.training_inputs:
-
             train_and_x: str = self.concatenate_with_space(training_sample, x)
             combined_compressed: int = self.compressor.get_compressed_length(
                 train_and_x
@@ -243,8 +242,8 @@ class KnnCompressor:
             compressed_samples.append(compressed_sample)
             compressed_combined.append(combined)
 
-        compressed_samples: np.ndarray = np.array(compressed_samples)  # .reshape(-1)
-        compressed_combined: np.ndarray = np.array(compressed_combined)  # .reshape(-1)
+        compressed_samples: np.ndarray = np.array(compressed_samples)
+        compressed_combined: np.ndarray = np.array(compressed_combined)
 
         distances: np.ndarray = self._calculate_distance(
             compressed_samples, compressed_combined
@@ -265,8 +264,8 @@ class KnnCompressor:
 
 
 if __name__ == "__main__":
-
     import random
+
     from npc_gzip.compressors.gzip_compressor import GZipCompressor
 
     training_data = ["hey", "hi", "how are you?", "not too bad"]
@@ -278,13 +277,13 @@ if __name__ == "__main__":
         compressor=GZipCompressor(),
         training_inputs=training_data,
         training_labels=training_labels,
-        distance_metric='ncd'
+        distance_metric="ncd",
     )
 
-    test = np.array([
-        'hey', 
-        'you are a real pain in my ass', 
-        'go away please'
-    ])
+    test = np.array(["hey", "you are a real pain in my ass", "go away please"])
 
-    distances, labels, similar_samples = model.predict(test, top_k=1)
+    top_k = 1
+    distances, labels, similar_samples = model.predict(test, top_k=top_k)
+    assert distances.shape == (test.shape[0], len(training_data))
+    assert labels.shape == similar_samples.shape
+    assert distances.shape[0] == labels.shape[0] == similar_samples.shape[0]
