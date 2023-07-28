@@ -6,9 +6,8 @@ import numpy as np
 
 
 class DefaultCompressor:
-    """for non-neural-based compressor"""
-
-    def __init__(self, compressor, typ="text"):
+    """For non-neural-based compressor"""
+    def __init__(self, compressor, typ='text'):
         try:
             self.compressor = import_module(compressor)
         except ModuleNotFoundError:
@@ -19,6 +18,11 @@ class DefaultCompressor:
         """
         Calculates the size of `x` once compressed.
 
+        Arguments:
+            x (str): String to be compressed.
+
+        Returns:
+            int: Length of x after compression.
         """
         if self.type == "text":
             return len(self.compressor.compress(x.encode("utf-8")))
@@ -30,6 +34,11 @@ class DefaultCompressor:
         Returns the compressed size of the original function
         in bits.
 
+        Arguments:
+            original_fn (str): Function name to be compressed.
+
+        Returns:
+            int: Compressed size of original_fn content in bits.
         """
         with open(original_fn) as fo:
             data = fo.read()
