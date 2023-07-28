@@ -9,7 +9,7 @@ from npc_gzip.exceptions import (
     InvalidObjectTypeException,
     UnsupportedDistanceMetricException,
 )
-
+from tqdm import tqdm
 
 class KnnCompressor:
     """
@@ -94,7 +94,10 @@ class KnnCompressor:
         ).reshape(-1)
 
     def _calculate_distance(
-        self, compressed_x: np.ndarray, compressed_combined: np.ndarray
+        self, 
+        compressed_x: np.ndarray,
+        compressed_combined: np.ndarray,
+        compressed_training: np.ndarray = None
     ) -> np.ndarray:
         """
         Helper function that converts the string representation
@@ -115,12 +118,19 @@ class KnnCompressor:
         Returns:
             np.ndarray: Numpy array containing the distance metric.
         """
-
-        distance = Distance(
-            np.resize(self.compressed_training_inputs, compressed_x.shape),
-            compressed_x,
-            compressed_combined,
-        )
+        
+        if compressed_training is None:
+            distance = Distance(
+                np.resize(self.compressed_training_inputs, compressed_x.shape),
+                compressed_x,
+                compressed_combined,
+            )
+        else:
+            distance = Distance(
+                np.resize(compressed_training, compressed_x.shape),
+                compressed_x,
+                compressed_combined,
+            )
 
         if self.distance_metric == "ncd":
             return distance.ncd
@@ -133,7 +143,7 @@ class KnnCompressor:
         else:
             return "Invalid Distance Metric"
 
-    def _compress_sample(self, x: str) -> tuple:
+    def _compress_sample(self, x: str, sampling_percentage: float = 1.0) -> tuple:
         """
         Helper method that compresses `x` against each
         item in `self.training_inputs` and returns the
@@ -156,15 +166,19 @@ class KnnCompressor:
         assert isinstance(
             x, str
         ), f"Non-string was passed to self._compress_sample: {x}"
+        
+        sample_size: int = int(sampling_percentage * self.training_inputs.shape[0])
+        training_inputs = np.random.choice(self.training_inputs, sample_size)
+        
         x_compressed = self.compressor.get_compressed_length(x)
         compressed_x: list = [
-            x_compressed for _ in range(self.training_inputs.shape[0])
+            x_compressed for _ in range(training_inputs.shape[0])
         ]
         compressed_x: np.ndarray = np.array(compressed_x).reshape(-1)
-        assert compressed_x.shape == self.training_inputs.shape
+        assert compressed_x.shape == training_inputs.shape
 
         combined: list = []
-        for training_sample in self.training_inputs:
+        for training_sample in training_inputs:
             train_and_x: str = self.concatenate_with_space(training_sample, x)
             combined_compressed: int = self.compressor.get_compressed_length(
                 train_and_x
@@ -172,7 +186,7 @@ class KnnCompressor:
             combined.append(combined_compressed)
 
         combined: np.ndarray = np.array(combined).reshape(-1)
-        assert self.training_inputs.shape == compressed_x.shape == combined.shape
+        assert training_inputs.shape == compressed_x.shape == combined.shape
 
         return (compressed_x, combined)
 
@@ -194,12 +208,14 @@ class KnnCompressor:
 
         return stringa + " " + stringb
 
-    def predict(self, x: Union[np.ndarray, Sequence[str], str], top_k: int = 1):
+    def predict(self, x: Union[np.ndarray, Sequence[str], str], top_k: int = 1, sampling_percentage: float = 1.0):
         """
-        Given a test sample `x`, this method will
-        compare `x` against the training data provided
-        and will return the best matching label if
-        `training_labels` was passed during instantiation.
+        Faster version of `predict`. This method 
+        will compare `x` against a sample of the 
+        training data provided and will return the 
+        best matching label if `training_labels` was 
+        passed during instantiation.
+        
         If `training_labels` was not passed during
         instantiation, or if `top_k` is not None, the most
         similar samples from `training_inputs` will be
@@ -214,6 +230,8 @@ class KnnCompressor:
                          `k` number of samples will be returned.
                          `top_k` must be greater than zero.
                          [default: top_k=1]
+            sampling_percentage (float): (0.0, 1.0] % of `self.training_inputs`
+                                         to sample predictions against.    
 
         Returns:
             np.ndarray: The distance-metrics matrix computed on the test 
@@ -239,16 +257,19 @@ class KnnCompressor:
 
         compressed_samples = []
         compressed_combined = []
-        for sample in x:
-            compressed_sample, combined = self._compress_sample(sample)
+        for sample in tqdm(x, desc='Compressing input...'):
+            compressed_sample, combined = self._compress_sample(sample, sampling_percentage)
             compressed_samples.append(compressed_sample)
             compressed_combined.append(combined)
 
         compressed_samples: np.ndarray = np.array(compressed_samples)
         compressed_combined: np.ndarray = np.array(compressed_combined)
+            
+        compressed_training_size: int = int(self.compressed_training_inputs.shape[0] * sampling_percentage)
+        compressed_training = np.random.choice(self.compressed_training_inputs, compressed_training_size)
 
         distances: np.ndarray = self._calculate_distance(
-            compressed_samples, compressed_combined
+            compressed_samples, compressed_combined, compressed_training
         )
 
         # top matching training samples and labels by
