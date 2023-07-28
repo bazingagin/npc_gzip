@@ -1,6 +1,7 @@
 from typing import Sequence, Union
 
 import numpy as np
+from tqdm import tqdm
 
 from npc_gzip.compressors.base import BaseCompressor
 from npc_gzip.distance import Distance
@@ -9,7 +10,7 @@ from npc_gzip.exceptions import (
     InvalidObjectTypeException,
     UnsupportedDistanceMetricException,
 )
-from tqdm import tqdm
+
 
 class KnnCompressor:
     """
@@ -94,10 +95,10 @@ class KnnCompressor:
         ).reshape(-1)
 
     def _calculate_distance(
-        self, 
+        self,
         compressed_x: np.ndarray,
         compressed_combined: np.ndarray,
-        compressed_training: np.ndarray = None
+        compressed_training: np.ndarray = None,
     ) -> np.ndarray:
         """
         Helper function that converts the string representation
@@ -118,7 +119,7 @@ class KnnCompressor:
         Returns:
             np.ndarray: Numpy array containing the distance metric.
         """
-        
+
         if compressed_training is None:
             distance = Distance(
                 np.resize(self.compressed_training_inputs, compressed_x.shape),
@@ -166,14 +167,12 @@ class KnnCompressor:
         assert isinstance(
             x, str
         ), f"Non-string was passed to self._compress_sample: {x}"
-        
+
         sample_size: int = int(sampling_percentage * self.training_inputs.shape[0])
         training_inputs = np.random.choice(self.training_inputs, sample_size)
-        
+
         x_compressed = self.compressor.get_compressed_length(x)
-        compressed_x: list = [
-            x_compressed for _ in range(training_inputs.shape[0])
-        ]
+        compressed_x: list = [x_compressed for _ in range(training_inputs.shape[0])]
         compressed_x: np.ndarray = np.array(compressed_x).reshape(-1)
         assert compressed_x.shape == training_inputs.shape
 
@@ -208,14 +207,19 @@ class KnnCompressor:
 
         return stringa + " " + stringb
 
-    def predict(self, x: Union[np.ndarray, Sequence[str], str], top_k: int = 1, sampling_percentage: float = 1.0):
+    def predict(
+        self,
+        x: Union[np.ndarray, Sequence[str], str],
+        top_k: int = 1,
+        sampling_percentage: float = 1.0,
+    ):
         """
-        Faster version of `predict`. This method 
-        will compare `x` against a sample of the 
-        training data provided and will return the 
-        best matching label if `training_labels` was 
+        Faster version of `predict`. This method
+        will compare `x` against a sample of the
+        training data provided and will return the
+        best matching label if `training_labels` was
         passed during instantiation.
-        
+
         If `training_labels` was not passed during
         instantiation, or if `top_k` is not None, the most
         similar samples from `training_inputs` will be
@@ -231,10 +235,10 @@ class KnnCompressor:
                          `top_k` must be greater than zero.
                          [default: top_k=1]
             sampling_percentage (float): (0.0, 1.0] % of `self.training_inputs`
-                                         to sample predictions against.    
+                                         to sample predictions against.
 
         Returns:
-            np.ndarray: The distance-metrics matrix computed on the test 
+            np.ndarray: The distance-metrics matrix computed on the test
                         set.
             np.ndarray: The `top_k` most similar `self.training_labels`.
             np.ndarray: The `top_k` best matching samples
@@ -257,16 +261,22 @@ class KnnCompressor:
 
         compressed_samples = []
         compressed_combined = []
-        for sample in tqdm(x, desc='Compressing input...'):
-            compressed_sample, combined = self._compress_sample(sample, sampling_percentage)
+        for sample in tqdm(x, desc="Compressing input..."):
+            compressed_sample, combined = self._compress_sample(
+                sample, sampling_percentage
+            )
             compressed_samples.append(compressed_sample)
             compressed_combined.append(combined)
 
         compressed_samples: np.ndarray = np.array(compressed_samples)
         compressed_combined: np.ndarray = np.array(compressed_combined)
-            
-        compressed_training_size: int = int(self.compressed_training_inputs.shape[0] * sampling_percentage)
-        compressed_training = np.random.choice(self.compressed_training_inputs, compressed_training_size)
+
+        compressed_training_size: int = int(
+            self.compressed_training_inputs.shape[0] * sampling_percentage
+        )
+        compressed_training = np.random.choice(
+            self.compressed_training_inputs, compressed_training_size
+        )
 
         distances: np.ndarray = self._calculate_distance(
             compressed_samples, compressed_combined, compressed_training

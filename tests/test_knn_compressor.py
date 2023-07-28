@@ -148,12 +148,15 @@ class TestKnnCompressor:
             (distance, labels, similar_samples) = self.model.predict(test_set, top_k)
 
     def test_sampling_percentage(self):
-
         test_set_size = random.randint(1, 10)
         test_set = [self.sample_input for _ in range(test_set_size)]
         top_k = 1
-        (full_distance, full_labels, full_similar_samples) = self.model.predict(test_set, top_k, sampling_percentage=1.0)
-        (distance, labels, similar_samples) = self.model.predict(test_set, top_k, sampling_percentage=0.1)
+        (full_distance, full_labels, full_similar_samples) = self.model.predict(
+            test_set, top_k, sampling_percentage=1.0
+        )
+        (distance, labels, similar_samples) = self.model.predict(
+            test_set, top_k, sampling_percentage=0.1
+        )
 
         assert full_labels.shape == labels.shape
         assert full_similar_samples.shape == similar_samples.shape
