@@ -1,6 +1,28 @@
-### Code for Paper: “Low-Resource” Text Classification: A Parameter-Free Classification Method with Compressors
+# Code for Paper: “Low-Resource” Text Classification: A Parameter-Free Classification Method with Compressors
 
 This paper is accepted to Findings of [ACL2023](https://aclanthology.org/2023.findings-acl.426/).
+
+## Getting Started
+
+This codebase is available on pypi.org via 
+
+
+```bash
+
+pip install npc-gzip
+
+```
+
+See the [examples](./examples/imdb.py) directory for example usage.
+
+
+## Testing
+
+This package utilizes `poetry` to maintain it's dependencies and `pytest` to execute tests. To get started running the tests:
+
+1. `poetry install --with test`
+2. `pytest tests/` 
+
 
 ### Require
 
