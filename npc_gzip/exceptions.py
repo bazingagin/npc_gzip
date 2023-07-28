@@ -116,3 +116,96 @@ class InvalidShapeException(Exception):
         if function_name is not None:
             self.message += f"function_name: {function_name}"
         super().__init__(self.message)
+
+
+class UnsupportedDistanceMetricException(Exception):
+    def __init__(
+        self,
+        distance_metric: str,
+        supported_distance_metrics: list = None,
+        function_name: str = None,
+    ):
+        self.message = f"""
+        The `distance_metric` ({distance_metric}) provided is not 
+        currently supported. Please submit an Issue and/or
+        Pull Request here to add support:
+        https://github.com/bazingagin/npc_gzip
+        
+        """
+
+        if supported_distance_metrics is not None:
+            self.message += (
+                f"supported_distance_metrics: {supported_distance_metrics}\n"
+            )
+
+        if function_name is not None:
+            self.message += f"function_name: {function_name}"
+        super().__init__(self.message)
+
+
+class InvalidObjectTypeException(Exception):
+    def __init__(
+        self,
+        passed_type: str,
+        supported_types: list = None,
+        function_name: str = None,
+    ):
+        self.message = f"""
+        The type passed ({passed_type}) provided is not 
+        currently supported. 
+        
+        """
+
+        if supported_types is not None:
+            self.message += f"supported types: {supported_types}\n"
+
+        if function_name is not None:
+            self.message += f"function_name: {function_name}"
+        super().__init__(self.message)
+
+
+class InputLabelEqualLengthException(Exception):
+    def __init__(
+        self,
+        training_samples: int,
+        label_samples: int,
+        function_name: str = None,
+    ):
+        self.message = f"""
+        If training labels are passed, the number 
+        of training data samples must equal the 
+        number of training label samples
+        
+        training_samples: {training_samples}
+        label_samples: {label_samples}
+        
+        """
+
+        if function_name is not None:
+            self.message += f"function_name: {function_name}"
+        super().__init__(self.message)
+
+
+class UnsupportedDistanceMetricException(Exception):
+    def __init__(
+        self,
+        distance_metric: str,
+        supported_distance_metrics: list = None,
+        function_name: str = None,
+    ):
+        self.message = f"""
+        The `distance_metric` ({distance_metric}) provided is not 
+        currently supported. Please submit an Issue and/or
+        Pull Request here to add support:
+        https://github.com/bazingagin/npc_gzip
+        
+        """
+
+        if supported_distance_metrics is not None:
+            self.message += (
+                f"supported_distance_metrics: {supported_distance_metrics}\n"
+            )
+
+        if function_name is not None:
+            self.message += f"function_name: {function_name}"
+        super().__init__(self.message)
