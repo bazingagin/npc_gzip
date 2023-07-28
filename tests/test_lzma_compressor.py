@@ -1,16 +1,14 @@
+import lzma
 from types import ModuleType
 
 import pytest
 
 from npc_gzip.compressors.base import BaseCompressor
-from npc_gzip.exceptions import InvalidCompressorException
-
-import lzma
 from npc_gzip.compressors.lzma_compressor import LzmaCompressor
+from npc_gzip.exceptions import InvalidCompressorException
 
 
 class TestBz2Compressor:
-
     base_compressor = BaseCompressor(lzma)
     compressor = LzmaCompressor()
     example_input = "hello there!"
@@ -27,7 +25,6 @@ class TestBz2Compressor:
             assert isinstance(out, bytes)
 
     def test_get_compressed_length(self):
-
         example_input_length = self.compressor.get_compressed_length(self.example_input)
         assert isinstance(example_input_length, int)
         assert example_input_length > 0
@@ -40,7 +37,6 @@ class TestBz2Compressor:
             assert out > 0
 
     def test_get_bits_per_character(self):
-
         example_bits_per_character = self.compressor.get_bits_per_character(
             self.example_input
         )

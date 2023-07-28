@@ -12,7 +12,6 @@ class BaseCompressor:
     """
 
     def __init__(self, compressor: ModuleType):
-
         if not isinstance(compressor, (ModuleType, BaseCompressor)):
             raise InvalidCompressorException(
                 f"Not a function passed: {type(compressor)}"
@@ -108,7 +107,6 @@ class BaseCompressor:
 
 
 if __name__ == "__main__":
-
     import gzip
 
     compressor = BaseCompressor(compressor=gzip)

@@ -2,10 +2,7 @@ from typing import Union
 
 import numpy as np
 
-from npc_gzip.exceptions import (
-    CompressedValuesEqualZero,
-    InvalidShapeException,
-)
+from npc_gzip.exceptions import CompressedValuesEqualZero, InvalidShapeException
 
 
 class Distance:
@@ -15,7 +12,6 @@ class Distance:
         compressed_values_b: Union[list, np.ndarray],
         compressed_values_ab: Union[list, np.ndarray],
     ):
-
         if not isinstance(compressed_values_a, np.ndarray):
             compressed_values_a = np.array(compressed_values_a)
 
@@ -34,7 +30,6 @@ class Distance:
             == compressed_values_b.shape
             == compressed_values_ab.shape
         ):
-
             self.compressed_values_a = compressed_values_a
             self.compressed_values_b = compressed_values_b
             self.compressed_values_ab = compressed_values_ab
@@ -52,7 +47,6 @@ class Distance:
         compressed_value_b: float,
         compressed_value_ab: float,
     ) -> float:
-
         denominator = max(compressed_value_a, compressed_value_b)
         if denominator == 0:
             raise CompressedValuesEqualZero(
@@ -69,7 +63,6 @@ class Distance:
         compressed_value_b: float,
         compressed_value_ab: float,
     ) -> float:
-
         denominator = compressed_value_a + compressed_value_b
         if denominator == 0:
             raise CompressedValuesEqualZero(

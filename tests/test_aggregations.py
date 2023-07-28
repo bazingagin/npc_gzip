@@ -1,16 +1,16 @@
 import pytest
-from npc_gzip.exceptions import StringTooShortException
+
 from npc_gzip.aggregations import (
-    concatenate_with_space,
     aggregate_strings,
     average,
+    concatenate_with_space,
     min_max_aggregation,
     stack,
 )
+from npc_gzip.exceptions import StringTooShortException
 
 
 class TestAggregations:
-
     stringa: str = "hey there how are you?"
     stringb: str = "I am just hanging out!"
 

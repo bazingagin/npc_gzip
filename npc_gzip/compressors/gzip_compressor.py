@@ -20,7 +20,6 @@ class GZipCompressor(BaseCompressor):
 
 
 if __name__ == "__main__":
-
     compressor = GZipCompressor()
     example: str = "Hello there!"
     compressed_length: int = compressor.get_compressed_length(example)

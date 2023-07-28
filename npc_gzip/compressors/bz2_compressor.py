@@ -21,7 +21,6 @@ class Bz2Compressor(BaseCompressor):
 
 
 if __name__ == "__main__":
-
     compressor = Bz2Compressor()
     example: str = "Hello there!"
     compressed_length: int = compressor.get_compressed_length(example)
