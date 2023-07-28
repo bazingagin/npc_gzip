@@ -1,6 +1,5 @@
 import numpy as np
 import itertools
-from npc_gzip.exceptions import StringTooShortException
 
 
 def concatenate_with_space(stringa: str, stringb: str) -> str:
