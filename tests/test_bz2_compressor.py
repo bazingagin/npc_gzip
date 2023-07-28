@@ -8,6 +8,7 @@ from npc_gzip.exceptions import InvalidCompressorException
 import bz2
 from npc_gzip.compressors.bz2_compressor import Bz2Compressor
 
+
 class TestBz2Compressor:
 
     base_compressor = BaseCompressor(bz2)

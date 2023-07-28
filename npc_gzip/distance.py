@@ -25,16 +25,15 @@ class Distance:
         if not isinstance(compressed_values_ab, np.ndarray):
             compressed_values_ab = np.array(compressed_values_ab)
 
-        compressed_values_a = compressed_values_a.reshape(-1)
-        compressed_values_b = compressed_values_b.reshape(-1)
-        compressed_values_ab = compressed_values_ab.reshape(-1)
+        compressed_values_a = compressed_values_a
+        compressed_values_b = compressed_values_b
+        compressed_values_ab = compressed_values_ab
 
         if (
             compressed_values_a.shape
             == compressed_values_b.shape
             == compressed_values_ab.shape
         ):
-            
 
             self.compressed_values_a = compressed_values_a
             self.compressed_values_b = compressed_values_b
@@ -135,51 +134,63 @@ class Distance:
         """
         A numpy vectorized form of self._ncd.
 
-
         """
-        return np.vectorize(self._ncd)(
+
+        out = np.vectorize(self._ncd)(
             self.compressed_values_a,
             self.compressed_values_b,
             self.compressed_values_ab,
         )
+        out = out.reshape(self.compressed_values_a.shape)
+
+        return out
 
     @property
     def cdm(self) -> np.ndarray:
         """
         A numpy vectorized form of self._cdm.
 
-
         """
-        return np.vectorize(self._cdm)(
+
+        out = np.vectorize(self._cdm)(
             self.compressed_values_a,
             self.compressed_values_b,
             self.compressed_values_ab,
         )
+        out = out.reshape(self.compressed_values_a.shape)
+
+        return out
 
     @property
     def clm(self) -> np.ndarray:
         """
         A numpy vectorized form of self._clm.
 
-
         """
-        return np.vectorize(self._clm)(
+
+        out = np.vectorize(self._clm)(
             self.compressed_values_a,
             self.compressed_values_b,
             self.compressed_values_ab,
         )
+        out = out.reshape(self.compressed_values_a.shape)
+
+        return out
 
     @property
     def mse(self) -> np.ndarray:
         """
         A numpy vectorized form of self._mse.
 
-
         """
-        return np.vectorize(self._mse)(
+
+        out = np.vectorize(self._mse)(
             self.compressed_values_a,
             self.compressed_values_b,
         )
+        out = out.reshape(self.compressed_values_a.shape)
+
+        return out
 
 
 if __name__ == "__main__":

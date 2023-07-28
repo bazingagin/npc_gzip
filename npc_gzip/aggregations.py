@@ -16,7 +16,7 @@ def concatenate_with_space(stringa: str, stringb: str) -> str:
 
     stringa = str(stringa)
     stringb = str(stringb)
-    
+
     return stringa + " " + stringb
 
 
@@ -38,20 +38,19 @@ def aggregate_strings(stringa: str, stringb: str, by_character: bool = False) ->
 
     stringa = str(stringa)
     stringb = str(stringb)
-    
+
     stringa_list: list = stringa.split()
     stringb_list: list = stringb.split()
 
     zipped_lists: list = list(zip(stringa_list, stringb_list))
-    out: list = list(
-        itertools.chain(*zipped_lists)
-    )
-    
-    aggregated: str = ' '.join(out)
+    out: list = list(itertools.chain(*zipped_lists))
+
+    aggregated: str = " ".join(out)
     if by_character:
-        aggregated: str = ''.join(out)
-        
+        aggregated: str = "".join(out)
+
     return aggregated
+
 
 def average(array_a: np.ndarray, array_b: np.ndarray) -> np.ndarray:
     """

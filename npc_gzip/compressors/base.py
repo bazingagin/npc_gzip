@@ -14,7 +14,9 @@ class BaseCompressor:
     def __init__(self, compressor: ModuleType):
 
         if not isinstance(compressor, (ModuleType, BaseCompressor)):
-            raise InvalidCompressorException(f"Not a function passed: {type(compressor)}")
+            raise InvalidCompressorException(
+                f"Not a function passed: {type(compressor)}"
+            )
         self.compressor = compressor
 
     def _open_file(self, filepath: str, as_bytes: bool = False):
