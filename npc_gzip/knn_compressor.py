@@ -216,6 +216,8 @@ class KnnCompressor:
                          [default: top_k=1]
 
         Returns:
+            np.ndarray: The distance-metrics matrix computed on the test 
+                        set.
             np.ndarray: The `top_k` most similar `self.training_labels`.
             np.ndarray: The `top_k` best matching samples
                            from `self.training_inputs`.
