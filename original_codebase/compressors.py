@@ -7,7 +7,8 @@ import numpy as np
 
 class DefaultCompressor:
     """For non-neural-based compressor"""
-    def __init__(self, compressor, typ='text'):
+
+    def __init__(self, compressor, typ="text"):
         try:
             self.compressor = import_module(compressor)
         except ModuleNotFoundError:

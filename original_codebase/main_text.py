@@ -3,6 +3,9 @@ import time
 from functools import partial
 from typing import Callable
 
+from compressors import *
+from data import *
+from experiments import *
 from pathos.multiprocessing import ProcessingPool as Pool
 from torchtext.datasets import (
     AG_NEWS,
@@ -13,10 +16,6 @@ from torchtext.datasets import (
     YahooAnswers,
     YelpReviewPolarity,
 )
-
-from compressors import *
-from data import *
-from experiments import *
 from utils import *
 
 # np.random.seed(6)
@@ -90,7 +89,11 @@ def record_distance(
 def non_neurl_knn_exp_given_dis(dis_matrix, k, test_label, train_label):
     knn_exp = KnnExpText(None, None, None)
     _, correct = knn_exp.calc_acc(
-        k, test_label, train_label=train_label, provided_distance_matrix=dis_matrix, rand=args.random
+        k,
+        test_label,
+        train_label=train_label,
+        provided_distance_matrix=dis_matrix,
+        rand=args.random,
     )
     return correct
 
@@ -284,4 +287,6 @@ if __name__ == "__main__":
                 print("Altogether Accuracy is: {}".format(all_correct / total_num))
             else:
                 dis_matrix = np.load(args.distance_fn)
-                non_neurl_knn_exp_given_dis(dis_matrix, args.k, test_labels, train_labels)
+                non_neurl_knn_exp_given_dis(
+                    dis_matrix, args.k, test_labels, train_labels
+                )

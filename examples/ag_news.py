@@ -46,7 +46,7 @@ def get_data() -> tuple:
 
 def fit_model(
     train_text: np.ndarray, train_labels: np.ndarray, distance_metric: str = "ncd"
-) -> KnnClassifier :
+) -> KnnClassifier:
     """
     Fits a Knn-GZip compressor on the train
     data and returns it.
@@ -69,14 +69,14 @@ def fit_model(
 
     return model
 
-def main() -> None:
 
+def main() -> None:
     print(f"Fetching data...")
     ((train_text, train_labels), (test_text, test_labels)) = get_data()
 
     print(f"Fitting model...")
     model = fit_model(train_text, train_labels)
-    random_indicies = np.random.choice(test_text.shape[0], 1000, replace=False)  
+    random_indicies = np.random.choice(test_text.shape[0], 1000, replace=False)
 
     sample_test_text = test_text[random_indicies]
     sample_test_labels = test_labels[random_indicies]
@@ -85,7 +85,7 @@ def main() -> None:
     top_k = 1
 
     # Here we use the `sampling_percentage` to save time
-    # at the expense of worse predictions. This 
+    # at the expense of worse predictions. This
     # `sampling_percentage` selects a random % of training
     # data to compare `sample_test_text` against rather
     # than comparing it against the entire training dataset.
@@ -94,8 +94,6 @@ def main() -> None:
     )
 
     print(classification_report(sample_test_labels, labels.reshape(-1)))
-
-
 
 
 if __name__ == "__main__":
