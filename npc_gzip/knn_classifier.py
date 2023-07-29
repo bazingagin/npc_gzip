@@ -12,7 +12,7 @@ from npc_gzip.exceptions import (
 )
 
 
-class KnnCompressor:
+class KnnClassifier:
     """
     Given the training input and optional
     training labels data, this class stores
@@ -306,7 +306,7 @@ if __name__ == "__main__":
     training_labels = [random.randint(0, 1) for _ in range(len(training_data))]
     assert len(training_data) == len(training_labels)
 
-    model = KnnCompressor(
+    model = KnnClassifier(
         compressor=GZipCompressor(),
         training_inputs=training_data,
         training_labels=training_labels,

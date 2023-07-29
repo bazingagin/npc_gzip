@@ -5,7 +5,7 @@ from torchtext.datasets import IMDB
 
 from npc_gzip.compressors.base import BaseCompressor
 from npc_gzip.compressors.gzip_compressor import GZipCompressor
-from npc_gzip.knn_compressor import KnnCompressor
+from npc_gzip.knn_classifier import KnnClassifier
 
 
 def get_data():
@@ -56,11 +56,11 @@ def fit_model(
         train_labels (np.ndarray): Training labels as a numpy array.
 
     Returns:
-        KnnCompressor: Trained Knn-Compressor model ready to make predictions.
+        KnnClassifier: Trained Knn-Compressor model ready to make predictions.
     """
 
     compressor: BaseCompressor = GZipCompressor()
-    model: KnnCompressor = KnnCompressor(
+    model: KnnClassifier = KnnClassifier(
         compressor=compressor,
         training_inputs=train_text,
         training_labels=train_labels,

@@ -13,11 +13,11 @@ from npc_gzip.exceptions import (
     InvalidObjectTypeException,
     UnsupportedDistanceMetricException,
 )
-from npc_gzip.knn_compressor import KnnCompressor
+from npc_gzip.knn_classifier import KnnClassifier
 from npc_gzip.utils import generate_dataset
 
 
-class TestKnnCompressor:
+class TestKnnClassifier:
     gzip_compressor: BaseCompressor = GZipCompressor()
     bz2_compressor: BaseCompressor = Bz2Compressor()
     lzma_compressor: BaseCompressor = LzmaCompressor()
@@ -26,7 +26,7 @@ class TestKnnCompressor:
     training_dataset: list = generate_dataset(dataset_size)
     training_labels: list = [random.randint(0, 10) for _ in range(dataset_size)]
 
-    model = KnnCompressor(
+    model = KnnClassifier(
         compressor=gzip_compressor,
         training_inputs=training_dataset,
         training_labels=training_labels,
@@ -48,7 +48,7 @@ class TestKnnCompressor:
 
         assert self.model.supported_distance_metrics == ["ncd", "clm", "cdm", "mse"]
 
-        model = KnnCompressor(
+        model = KnnClassifier(
             compressor=self.gzip_compressor,
             training_inputs=np.array(self.training_dataset),
             training_labels=np.array(self.training_labels),
@@ -65,7 +65,7 @@ class TestKnnCompressor:
 
     def test_invalid_metric(self):
         with pytest.raises(UnsupportedDistanceMetricException):
-            model = KnnCompressor(
+            model = KnnClassifier(
                 compressor=self.gzip_compressor,
                 training_inputs=np.array(self.training_dataset),
                 training_labels=np.array(self.training_labels),
@@ -80,7 +80,7 @@ class TestKnnCompressor:
         labels = [random.randint(0, 10) for _ in range(training_label_size)]
 
         with pytest.raises(InputLabelEqualLengthException):
-            model = KnnCompressor(
+            model = KnnClassifier(
                 compressor=self.gzip_compressor,
                 training_inputs=dataset,
                 training_labels=labels,
