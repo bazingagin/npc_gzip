@@ -8,7 +8,7 @@ readme = "README.md"
 packages = [{include = "npc_gzip"}]
 
 [tool.poetry.dependencies]
-python = "^3.7"
+python = "^3.9"
 numpy = "^1.25.1"
 tqdm = "^4.65.0"
 
