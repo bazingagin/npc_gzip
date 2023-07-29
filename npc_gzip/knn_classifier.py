@@ -216,7 +216,7 @@ class KnnClassifier:
         x: Sequence,
         top_k: int = 1,
         sampling_percentage: float = 1.0,
-    ):
+    ) -> tuple:
         """
         Faster version of `predict`. This method
         will compare `x` against a sample of the
