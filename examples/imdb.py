@@ -83,8 +83,10 @@ if __name__ == "__main__":
     # last, so we're shuffling so that our model
     # has something to predict other than `1`.
 
-    sample_test_text = np.random.choice(test_text, 1000)
-    sample_test_labels = np.random.choice(test_labels, 1000)
+    random_indicies = np.random.choice(test_text.shape[0], 1000, replace=False)  
+
+    sample_test_text = test_text[random_indicies]
+    sample_test_labels = test_labels[random_indicies]
 
     print(f"Generating predictions...")
     top_k = 1
