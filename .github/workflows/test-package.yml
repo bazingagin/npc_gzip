@@ -3,6 +3,7 @@ name: Run npc_gzip tests
 on: [push, pull_request]
 
 jobs:
+  
   run-tests:
 
     runs-on: ubuntu-latest
