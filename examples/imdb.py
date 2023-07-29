@@ -14,7 +14,7 @@ def get_data() -> tuple:
     and returns two tuples the first being the
     training data and the second being the test
     data. Each tuple contains the text and label
-    respsectively as numpy arrays.
+    respectively as numpy arrays.
 
     """
 
