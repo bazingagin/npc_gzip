@@ -23,8 +23,8 @@ class KnnClassifier:
     def __init__(
         self,
         compressor: BaseCompressor,
-        training_inputs: Union[np.ndarray, Sequence[str]],
-        training_labels: Union[np.ndarray, Sequence[Union[str, int]]] = None,
+        training_inputs: Sequence,
+        training_labels: Sequence = None,
         distance_metric: str = "ncd",
     ):
         self.compressor = compressor
@@ -209,7 +209,7 @@ class KnnClassifier:
 
     def predict(
         self,
-        x: Union[np.ndarray, Sequence[str], str],
+        x: Sequence,
         top_k: int = 1,
         sampling_percentage: float = 1.0,
     ):
@@ -228,7 +228,7 @@ class KnnClassifier:
         resulting array is [batch_size, self.training_inputs.shape[0] ]
 
         Arguments:
-            x (Union[np.ndarray, Sequence[str]]): The sample data to compare against
+            x (Sequence): The sample data to compare against
                                                   the `training_inputs`.
             top_k (int): [Optional] If not None, the most similar
                          `k` number of samples will be returned.
