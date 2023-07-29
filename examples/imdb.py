@@ -8,7 +8,7 @@ from npc_gzip.compressors.gzip_compressor import GZipCompressor
 from npc_gzip.knn_classifier import KnnClassifier
 
 
-def get_data():
+def get_data() -> tuple:
     """
     Pulls the IMDB sentiment analysis dataset
     and returns two tuples the first being the
@@ -46,7 +46,7 @@ def get_data():
 
 def fit_model(
     train_text: np.ndarray, train_labels: np.ndarray, distance_metric: str = "ncd"
-):
+) -> KnnClassifier :
     """
     Fits a Knn-GZip compressor on the train
     data and returns it.
@@ -69,8 +69,8 @@ def fit_model(
 
     return model
 
+def main() -> None:
 
-if __name__ == "__main__":
     print(f"Fetching data...")
     ((train_text, train_labels), (test_text, test_labels)) = get_data()
 
@@ -101,6 +101,12 @@ if __name__ == "__main__":
     )
 
     print(classification_report(sample_test_labels, labels.reshape(-1)))
+
+
+
+
+if __name__ == "__main__":
+    main()
 
 
 #               precision    recall  f1-score   support
