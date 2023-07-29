@@ -46,7 +46,7 @@ class TestDistance:
             distance._ncd(a, b, ab)
 
         with pytest.raises(ValueError):
-            out = distance._ncd(self.array_a, self.array_b, self.array_ab)
+            distance._ncd(self.array_a, self.array_b, self.array_ab)
 
     def test__cdm(self):
         distance = Distance(self.float_a, self.float_b, self.float_ab)
@@ -58,7 +58,7 @@ class TestDistance:
             distance._cdm(a, b, ab)
 
         with pytest.raises(ValueError):
-            out = distance._ncd(self.array_a, self.array_b, self.array_ab)
+            distance._ncd(self.array_a, self.array_b, self.array_ab)
 
     def test__clm(self):
         distance = Distance(self.float_a, self.float_b, self.float_ab)
@@ -70,7 +70,7 @@ class TestDistance:
             distance._clm(a, b, ab)
 
         with pytest.raises(ValueError):
-            out = distance._ncd(self.array_a, self.array_b, self.array_ab)
+            distance._ncd(self.array_a, self.array_b, self.array_ab)
 
     def test__mse(self):
         distance = Distance(self.float_a, self.float_b, self.float_ab)

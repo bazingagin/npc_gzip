@@ -27,6 +27,8 @@ class TestBaseCompressor:
 
         with pytest.raises(AssertionError):
             self.compressor._open_file(invalid_filepath)
+
+        with pytest.raises(AssertionError):
             self.compressor._open_file(invalid_filepath, as_bytes=True)
 
         file_contents = self.compressor._open_file(valid_filepath, as_bytes=False)

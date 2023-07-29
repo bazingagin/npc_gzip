@@ -65,7 +65,7 @@ class TestKnnClassifier:
 
     def test_invalid_metric(self):
         with pytest.raises(UnsupportedDistanceMetricException):
-            model = KnnClassifier(
+            KnnClassifier(
                 compressor=self.gzip_compressor,
                 training_inputs=np.array(self.training_dataset),
                 training_labels=np.array(self.training_labels),
@@ -80,7 +80,7 @@ class TestKnnClassifier:
         labels = [random.randint(0, 10) for _ in range(training_label_size)]
 
         with pytest.raises(InputLabelEqualLengthException):
-            model = KnnClassifier(
+            KnnClassifier(
                 compressor=self.gzip_compressor,
                 training_inputs=dataset,
                 training_labels=labels,
@@ -138,14 +138,14 @@ class TestKnnClassifier:
         top_k = -1
 
         with pytest.raises(AssertionError):
-            (distance, labels, similar_samples) = self.model.predict(test_set, top_k)
+            self.model.predict(test_set, top_k)
 
     def test_top_k_bigger_than_test_set(self):
         test_set_size = random.randint(1, 10)
         test_set = [self.sample_input for _ in range(test_set_size)]
         top_k = test_set_size + 1
         with pytest.raises(AssertionError):
-            (distance, labels, similar_samples) = self.model.predict(test_set, top_k)
+            self.model.predict(test_set, top_k)
 
     def test_sampling_percentage(self):
         test_set_size = random.randint(1, 10)
