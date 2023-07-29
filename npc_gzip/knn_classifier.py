@@ -96,7 +96,7 @@ class KnnClassifier:
 
     def _calculate_distance(
         self,
-        compressed_x: np.ndarray,
+        compressed_input: np.ndarray,
         compressed_combined: np.ndarray,
         compressed_training: Optional[np.ndarray] = None,
     ) -> np.ndarray:
@@ -105,11 +105,11 @@ class KnnClassifier:
         of `self.distance_metric` to the actual
         `npc_gzip.distance.Distance.[distance_metric]`. Then
         that distance metric is calculated using
-        `self.compressed_training_inputs`, `compressed_x` and
+        `self.compressed_training_inputs`, `compressed_input` and
         `compressed_combined`.
 
         Arguments:
-            compressed_x (np.ndarray): Numpy array representing the
+            compressed_input (np.ndarray): Numpy array representing the
                                        compressed lengths of the input
                                        data to be scored.
             compressed_combined (np.ndarray): Numpy array representing the
@@ -122,14 +122,14 @@ class KnnClassifier:
 
         if compressed_training is None:
             distance = Distance(
-                np.resize(self.compressed_training_inputs, compressed_x.shape),
-                compressed_x,
+                np.resize(self.compressed_training_inputs, compressed_input.shape),
+                compressed_input,
                 compressed_combined,
             )
         else:
             distance = Distance(
-                np.resize(compressed_training, compressed_x.shape),
-                compressed_x,
+                np.resize(compressed_training, compressed_input.shape),
+                compressed_input,
                 compressed_combined,
             )
 
@@ -175,10 +175,10 @@ class KnnClassifier:
         sample_size: int = int(sampling_percentage * self.training_inputs.shape[0])
         training_inputs = np.random.choice(self.training_inputs, sample_size)
 
-        x_compressed = self.compressor.get_compressed_length(x)
-        compressed_x: list = [x_compressed for _ in range(training_inputs.shape[0])]
-        compressed_x: np.ndarray = np.array(compressed_x).reshape(-1)
-        assert compressed_x.shape == training_inputs.shape
+        compressed_input_length: int = self.compressor.get_compressed_length(x)
+        compressed_input: list = [compressed_input_length for _ in range(training_inputs.shape[0])]
+        compressed_input: np.ndarray = np.array(compressed_input).reshape(-1)
+        assert compressed_input.shape == training_inputs.shape
 
         combined: list = []
         for training_sample in training_inputs:
@@ -189,9 +189,9 @@ class KnnClassifier:
             combined.append(combined_compressed)
 
         combined: np.ndarray = np.array(combined).reshape(-1)
-        assert training_inputs.shape == compressed_x.shape == combined.shape
+        assert training_inputs.shape == compressed_input.shape == combined.shape
 
-        return (compressed_x, combined)
+        return (compressed_input, combined)
 
     @staticmethod
     def concatenate_with_space(stringa: str, stringb: str) -> str:

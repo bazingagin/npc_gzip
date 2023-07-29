@@ -88,22 +88,22 @@ class TestKnnClassifier:
             )
 
     def test__compress_sample(self):
-        compressed_x, compressed_combined = self.model._compress_sample(
+        compressed_input, compressed_combined = self.model._compress_sample(
             self.sample_input
         )
 
-        assert isinstance(compressed_x, np.ndarray)
+        assert isinstance(compressed_input, np.ndarray)
         assert isinstance(compressed_combined, np.ndarray)
-        assert compressed_x.shape == compressed_combined.shape
+        assert compressed_input.shape == compressed_combined.shape
 
     def test__calculate_distance(self):
-        compressed_x, compressed_combined = self.model._compress_sample(
+        compressed_input, compressed_combined = self.model._compress_sample(
             self.sample_input
         )
-        distance = self.model._calculate_distance(compressed_x, compressed_combined)
+        distance = self.model._calculate_distance(compressed_input, compressed_combined)
 
         assert isinstance(distance, np.ndarray)
-        assert distance.shape == compressed_x.shape == compressed_combined.shape
+        assert distance.shape == compressed_input.shape == compressed_combined.shape
 
     def test_concatenate_with_space(self):
         a = "hello there"
