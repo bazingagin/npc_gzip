@@ -1,4 +1,4 @@
-from typing import Sequence, Union
+from typing import Sequence, Union, Optional
 
 import numpy as np
 from tqdm import tqdm
@@ -98,7 +98,7 @@ class KnnClassifier:
         self,
         compressed_x: np.ndarray,
         compressed_combined: np.ndarray,
-        compressed_training: np.ndarray = None,
+        compressed_training: Optional[np.ndarray] = None,
     ) -> np.ndarray:
         """
         Helper function that converts the string representation
@@ -142,7 +142,11 @@ class KnnClassifier:
         elif self.distance_metric == "mse":
             return distance.mse
         else:
-            return "Invalid Distance Metric"
+            raise UnsupportedDistanceMetricException(
+                self.distance_metric,
+                supported_distance_metrics=self.supported_distance_metrics,
+                function_name='_calculate_distance'
+            )
 
     def _compress_sample(self, x: str, sampling_percentage: float = 1.0) -> tuple:
         """
