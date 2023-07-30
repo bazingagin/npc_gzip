@@ -3,6 +3,15 @@ import string
 
 from npc_gzip.exceptions import InvalidObjectTypeException
 
+"""
+Helper functions used primarily in testing the
+rest of the codebase.
+
+>>> number_of_sentences = random.randint(1, 100)
+>>> dataset = generate_dataset(number_of_sentences)
+>>> assert len(dataset) == number_of_sentences
+"""
+
 
 def generate_sentence(number_of_words: int = 10) -> str:
     """
@@ -21,14 +30,14 @@ def generate_sentence(number_of_words: int = 10) -> str:
     """
 
     if not isinstance(number_of_words, int):
-        if isinstance(number_of_words, float):
+        try:
             number_of_words = int(number_of_words)
-        else:
+        except Exception as e:
             raise InvalidObjectTypeException(
                 type(number_of_words),
                 supported_types=[int, float],
                 function_name="generate_sentence",
-            )
+            ) from e
 
     assert number_of_words > 0, f"`number_of_words` must be greater than zero."
 
@@ -62,14 +71,14 @@ def generate_dataset(number_of_sentences: int) -> list:
     """
 
     if not isinstance(number_of_sentences, int):
-        if isinstance(number_of_sentences, float):
+        try:
             number_of_sentences = int(number_of_sentences)
-        else:
+        except Exception as e:
             raise InvalidObjectTypeException(
                 type(number_of_sentences),
                 supported_types=[int, float],
                 function_name="generate_dataset",
-            )
+            ) from e
 
     assert number_of_sentences > 0, f"`number_of_sentences` must be greater than zero."
 
@@ -79,9 +88,3 @@ def generate_dataset(number_of_sentences: int) -> list:
         dataset.append(generate_sentence(number_of_words))
 
     return dataset
-
-
-if __name__ == "__main__":
-    number_of_sentences = random.randint(1, 100)
-    dataset = generate_dataset(number_of_sentences)
-    assert len(dataset) == number_of_sentences

@@ -35,7 +35,7 @@ class TestKnnClassifier:
 
     sample_input: str = "hello there"
 
-    def test_init(self):
+    def test_init(self) -> None:
         assert self.model.distance_metric == "ncd"
         assert isinstance(self.model.training_inputs, np.ndarray)
         assert isinstance(self.model.compressed_training_inputs, np.ndarray)
@@ -63,7 +63,7 @@ class TestKnnClassifier:
             == model.compressed_training_inputs.shape[0]
         )
 
-    def test_invalid_metric(self):
+    def test_invalid_metric(self) -> None:
         with pytest.raises(UnsupportedDistanceMetricException):
             KnnClassifier(
                 compressor=self.gzip_compressor,
@@ -72,7 +72,7 @@ class TestKnnClassifier:
                 distance_metric="hoopla",
             )
 
-    def test_invalid_data_and_label_size(self):
+    def test_invalid_data_and_label_size(self) -> None:
         training_data_size = 10
         training_label_size = training_data_size - 1
 
@@ -87,7 +87,7 @@ class TestKnnClassifier:
                 distance_metric="ncd",
             )
 
-    def test__compress_sample(self):
+    def test__compress_sample(self) -> None:
         compressed_input, compressed_combined = self.model._compress_sample(
             self.sample_input
         )
@@ -96,7 +96,7 @@ class TestKnnClassifier:
         assert isinstance(compressed_combined, np.ndarray)
         assert compressed_input.shape == compressed_combined.shape
 
-    def test__calculate_distance(self):
+    def test__calculate_distance(self) -> None:
         compressed_input, compressed_combined = self.model._compress_sample(
             self.sample_input
         )
@@ -105,12 +105,12 @@ class TestKnnClassifier:
         assert isinstance(distance, np.ndarray)
         assert distance.shape == compressed_input.shape == compressed_combined.shape
 
-    def test_concatenate_with_space(self):
+    def test_concatenate_with_space(self) -> None:
         a = "hello there"
         b = "who goes there?"
         assert self.model.concatenate_with_space(a, b) == "hello there who goes there?"
 
-    def test_predict(self):
+    def test_predict(self) -> None:
         top_k = 1
         (distance, labels, similar_samples) = self.model.predict(
             self.sample_input, top_k
@@ -132,7 +132,7 @@ class TestKnnClassifier:
         assert labels.shape == (test_set_size, top_k)
         assert similar_samples.shape == (test_set_size, top_k)
 
-    def test_negative_top_k(self):
+    def test_negative_top_k(self) -> None:
         test_set_size = random.randint(1, 50)
         test_set = [self.sample_input for _ in range(test_set_size)]
         top_k = -1
@@ -140,14 +140,14 @@ class TestKnnClassifier:
         with pytest.raises(AssertionError):
             self.model.predict(test_set, top_k)
 
-    def test_top_k_bigger_than_test_set(self):
+    def test_top_k_bigger_than_test_set(self) -> None:
         test_set_size = random.randint(1, 10)
         test_set = [self.sample_input for _ in range(test_set_size)]
         top_k = test_set_size + 1
         with pytest.raises(AssertionError):
             self.model.predict(test_set, top_k)
 
-    def test_sampling_percentage(self):
+    def test_sampling_percentage(self) -> None:
         test_set_size = random.randint(1, 10)
         test_set = [self.sample_input for _ in range(test_set_size)]
         top_k = 1

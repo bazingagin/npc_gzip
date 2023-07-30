@@ -43,7 +43,7 @@ class KnnClassifier:
         training_inputs: Sequence,
         training_labels: Sequence = None,
         distance_metric: str = "ncd",
-    ):
+    ) -> None:
         self.compressor = compressor
 
         if isinstance(training_inputs, list) and isinstance(training_labels, list):
@@ -237,7 +237,9 @@ class KnnClassifier:
         x: Sequence,
         top_k: int = 1,
         sampling_percentage: float = 1.0,
-    ) -> tuple:
+    ) -> tuple[
+        np.ndarray[float, float], np.ndarray[float, float], np.ndarray[float, float]
+    ]:
         """
         Faster version of `predict`. This method
         will compare `x` against a sample of the
@@ -275,7 +277,7 @@ class KnnClassifier:
 
         assert top_k > 0, f"top_k ({top_k}) must be greater than zero."
 
-        x = x.reshape(-1)
+        x: np.ndarray = x.reshape(-1)
         assert (
             top_k <= x.shape[0]
         ), f"""
@@ -284,22 +286,24 @@ class KnnClassifier:
         
         """
 
-        compressed_samples = []
-        compressed_combined = []
+        samples: list = []
+        combined: list = []
         for sample in tqdm(x, desc="Compressing input..."):
-            compressed_sample, combined = self._compress_sample(
+            compressed_sample, combined_length = self._compress_sample(
                 sample, sampling_percentage
             )
-            compressed_samples.append(compressed_sample)
-            compressed_combined.append(combined)
+            samples.append(compressed_sample)
+            combined.append(combined_length)
 
-        compressed_samples: np.ndarray = np.array(compressed_samples)
-        compressed_combined: np.ndarray = np.array(compressed_combined)
+        compressed_samples: np.ndarray = np.array(samples)
+        compressed_combined: np.ndarray = np.array(combined)
+
+        assert isinstance(self.compressed_training_inputs, np.ndarray)
 
         compressed_training_size: int = int(
             self.compressed_training_inputs.shape[0] * sampling_percentage
         )
-        compressed_training = np.random.choice(
+        compressed_training: np.ndarray = np.random.choice(
             self.compressed_training_inputs, compressed_training_size
         )
 
@@ -313,8 +317,8 @@ class KnnClassifier:
         # get indicies of minimum top_k distances.
         minimum_distance_indices = np.argpartition(distances, top_k)[:, :top_k]
 
-        similar_samples = self.training_inputs[minimum_distance_indices]
-        labels = []
+        similar_samples: np.ndarray = self.training_inputs[minimum_distance_indices]
+        labels: np.ndarray = np.array([])
         if self.training_labels is not None:
             labels = self.training_labels[minimum_distance_indices]
 

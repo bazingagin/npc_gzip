@@ -1,26 +1,26 @@
 from npc_gzip.compressors.base import BaseCompressor
+from npc_gzip.exceptions import MissingDependencyException
 
 
 class GZipCompressor(BaseCompressor):
-    def __init__(self):
+    """
+    gzip compressor that inherits from
+    `npc_gzip.compressors.base.BaseCompressor`
+
+    >>> compressor: BaseCompressor = GZipCompressor()
+    >>> example: str = "Hello there!"
+    >>> compressed_length: int = compressor.get_compressed_length(example)
+    >>> bits_per_character: float = compressor.get_bits_per_character(example)
+    >>> assert isinstance(compressed_length, int)
+    >>> assert isinstance(bits_per_character, float)
+    """
+
+    def __init__(self) -> None:
         super().__init__(self)
 
         try:
             import gzip
         except ModuleNotFoundError as e:
-            import platform
-
-            major, minor, patch = platform.python_version_tuple()
-            if int(major) >= 3 and int(minor) >= 11:
-                raise ExceptionGroup([MissingDependencyException("gzip"), e])
-            else:
-                raise MissingDependencyException("gzip")
+            raise MissingDependencyException("gzip") from e
 
         self.compressor = gzip
-
-
-if __name__ == "__main__":
-    compressor = GZipCompressor()
-    example: str = "Hello there!"
-    compressed_length: int = compressor.get_compressed_length(example)
-    bits_per_character: float = compressor.get_bits_per_character(example)

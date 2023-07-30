@@ -11,7 +11,7 @@ class TestBaseCompressor:
     compressor = BaseCompressor(compressor=gzip)
     example_input = "hello there!"
 
-    def test_types(self):
+    def test_types(self) -> None:
         invalid_compressors = ["test", 0.1, 123, ("hello", "there"), {"hey": "hi"}]
 
         for compressor in invalid_compressors:
@@ -21,7 +21,7 @@ class TestBaseCompressor:
         valid_compressor = gzip
         BaseCompressor(valid_compressor)
 
-    def test__open_file(self):
+    def test__open_file(self) -> None:
         valid_filepath = "tests/test_base_compressor.py"
         invalid_filepath = "tests/test_base_compressor.py.xyz"
 
@@ -37,7 +37,7 @@ class TestBaseCompressor:
         file_contents = self.compressor._open_file(valid_filepath, as_bytes=True)
         assert isinstance(file_contents, str)
 
-    def test__compress(self):
+    def test__compress(self) -> None:
         compressed_bytes = self.compressor._compress(self.example_input)
         assert isinstance(compressed_bytes, bytes)
 
@@ -47,7 +47,7 @@ class TestBaseCompressor:
             out = self.compressor._compress(input_)
             assert isinstance(out, bytes)
 
-    def test_get_compressed_length(self):
+    def test_get_compressed_length(self) -> None:
         example_input_length = self.compressor.get_compressed_length(self.example_input)
         assert isinstance(example_input_length, int)
         assert example_input_length > 0
@@ -59,7 +59,7 @@ class TestBaseCompressor:
             assert isinstance(out, int)
             assert out > 0
 
-    def test_get_bits_per_character(self):
+    def test_get_bits_per_character(self) -> None:
         example_bits_per_character = self.compressor.get_bits_per_character(
             self.example_input
         )

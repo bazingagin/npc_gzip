@@ -1,4 +1,4 @@
-from typing import Union
+from typing import Sequence, Union
 
 import numpy as np
 
@@ -6,12 +6,53 @@ from npc_gzip.exceptions import CompressedValuesEqualZero, InvalidShapeException
 
 
 class Distance:
+    """
+    Used to calculate the distance between compressed
+    objects. Typical usage is your training data as
+    `compressed_values_a`, the data you want to predict
+    on as `compressed_values_b` and the two values
+    concatenated then compressed as `compressed_values_ab`.
+
+    >>> import random
+
+    >>> a = random.random()
+    >>> b = random.random()
+    >>> ab = random.random()
+
+    >>> distance = Distance(a, b, ab)
+    >>> ncd: float = distance._ncd(a, b, ab)
+    >>> cdm: float = distance._cdm(a, b, ab)
+    >>> clm: float = distance._clm(a, b, ab)
+    >>> mse: float = distance._mse(a, b)
+
+    >>> assert isinstance(ncd, float)
+    >>> assert isinstance(cdm, float)
+    >>> assert isinstance(clm, float)
+    >>> assert isinstance(mse, float)
+
+    >>> a = np.random.rand(3, 10)
+    >>> b = np.random.rand(3, 10)
+    >>> ab = np.random.rand(3, 10)
+
+    >>> distance = Distance(a, b, ab)
+
+    >>> ncd: np.ndarray = distance.ncd
+    >>> cdm: np.ndarray = distance.cdm
+    >>> clm: np.ndarray = distance.clm
+    >>> mse: np.ndarray = distance.mse
+
+    >>> assert isinstance(ncd, np.ndarray)
+    >>> assert isinstance(cdm, np.ndarray)
+    >>> assert isinstance(clm, np.ndarray)
+    >>> assert isinstance(mse, np.ndarray)
+    """
+
     def __init__(
         self,
-        compressed_values_a: Union[list, np.ndarray],
-        compressed_values_b: Union[list, np.ndarray],
-        compressed_values_ab: Union[list, np.ndarray],
-    ):
+        compressed_values_a: Sequence,
+        compressed_values_b: Sequence,
+        compressed_values_ab: Sequence,
+    ) -> None:
         if not isinstance(compressed_values_a, np.ndarray):
             compressed_values_a = np.array(compressed_values_a)
 
@@ -93,8 +134,8 @@ class Distance:
 
     def _mse(
         self,
-        compressed_value_a: Union[list, np.ndarray],
-        compressed_value_b: Union[list, np.ndarray],
+        compressed_value_a: Sequence,
+        compressed_value_b: Sequence,
     ) -> np.ndarray:
         """
         Computes the mean squared error between two

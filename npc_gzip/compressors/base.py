@@ -9,9 +9,18 @@ class BaseCompressor:
     Default compressor class that other compressors inherit
     from.
 
+    >>> import gzip
+
+    >>> compressor = BaseCompressor(compressor=gzip)
+
+    >>> example = "Hello there!"
+    >>> compressed_length: int = compressor.get_compressed_length(example)
+    >>> bits_per_character: float = compressor.get_bits_per_character(example)
+    >>> assert isinstance(compressed_length, int)
+    >>> assert isinstance(bits_per_character, float)
     """
 
-    def __init__(self, compressor: ModuleType):
+    def __init__(self, compressor: ModuleType) -> None:
         if not isinstance(compressor, (ModuleType, BaseCompressor)):
             raise InvalidCompressorException(
                 f"Not a function passed: {type(compressor)}"
@@ -104,13 +113,3 @@ class BaseCompressor:
             compressed_length_in_bits / number_of_characters
         )
         return compressed_length_per_number_of_characters
-
-
-if __name__ == "__main__":
-    import gzip
-
-    compressor = BaseCompressor(compressor=gzip)
-
-    example = "Hello there!"
-    compressed_length: int = compressor.get_compressed_length(example)
-    bits_per_character: float = compressor.get_bits_per_character(example)

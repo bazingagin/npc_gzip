@@ -13,7 +13,7 @@ class TestBz2Compressor:
     compressor = GZipCompressor()
     example_input = "hello there!"
 
-    def test__compress(self):
+    def test__compress(self) -> None:
         compressed_bytes = self.compressor._compress(self.example_input)
         base_compressed_bytes = self.base_compressor._compress(self.example_input)
         assert compressed_bytes == base_compressed_bytes
@@ -24,7 +24,7 @@ class TestBz2Compressor:
             out = self.base_compressor._compress(input_)
             assert isinstance(out, bytes)
 
-    def test_get_compressed_length(self):
+    def test_get_compressed_length(self) -> None:
         example_input_length = self.compressor.get_compressed_length(self.example_input)
         assert isinstance(example_input_length, int)
         assert example_input_length > 0
@@ -36,7 +36,7 @@ class TestBz2Compressor:
             assert isinstance(out, int)
             assert out > 0
 
-    def test_get_bits_per_character(self):
+    def test_get_bits_per_character(self) -> None:
         example_bits_per_character = self.compressor.get_bits_per_character(
             self.example_input
         )
