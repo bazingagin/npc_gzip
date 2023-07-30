@@ -312,33 +312,34 @@ def load_swahili() -> tuple:
     return train_ds, test_ds
 
 
-def load_filipino() -> tuple:
+def load_filipino(data_directory) -> tuple:
     """
-    deprecated - datasets on huggingface have overlapped train&test
+    Loads the Dengue Filipino dataset from local directory
 
-    Loads the Dengue Filipino dataset
+    :ref: https://github.com/jcblaisecruz02/Filipino-Text-Benchmarks#datasets
 
+    Arguments:
+        data_directory (str): Directory containing Dengue Filipino dataset
     Returns:
         tuple: Tuple of lists containing the training and testing datasets respectively.
     """
 
-    def process(dataset: Iterable) -> list:
-        label_dict = OrderedDict()
-        d = {"absent": 0, "dengue": 1, "health": 2, "mosquito": 3, "sick": 4}
-        for k, v in d.items():
-            label_dict[k] = v
-
+    def process(fn):
         pairs = []
-        for pair in dataset:
-            text = pair["text"]
-            for k in label_dict:
-                if pair[k] == 1:
-                    label = label_dict[k]
-            pairs.append((label, text))
+        with open(fn, "r") as f:
+            reader = csv.reader(f, delimiter=",", quotechar='"')
+            for row in reader:
+                text = row[0]
+                for i in range(1, 6):
+                    if row[i] == "1":
+                        label = i - 1
+                        pairs.append((label, text))
+                        break
         return pairs
 
-    ds = load_dataset("dengue_filipino")
-    train_ds, test_ds = process(ds["train"]), process(ds["test"])
+    train_ds, test_ds = process(os.path.join(data_directory, "train.csv")), process(
+        os.path.join(data_directory, "test.csv")
+    )
     return train_ds, test_ds
 
 
