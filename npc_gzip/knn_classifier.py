@@ -165,7 +165,11 @@ class KnnClassifier:
                 function_name="_calculate_distance",
             )
 
-    def _compress_sample(self, x: str, sampling_percentage: float = 1.0) -> tuple:
+    def _compress_sample(
+        self,
+        x: str,
+        training_inputs: Optional[np.ndarray] = None,
+    ) -> tuple:
         """
         Helper method that compresses `x` against each
         item in `self.training_inputs` and returns the
@@ -176,6 +180,10 @@ class KnnClassifier:
         Arguments:
             x (np.ndarray): The sample data to compare against
                             the `training_inputs`.
+            training_inputs (np.ndarray): [Optional] If provided, this
+                                          method will use `training_inputs`
+                                          when calculating the distance matrix
+                                          rather than `self.training_inputs`.
 
         Returns:
             np.ndarray: Compressed length of `x` as an array of shape
@@ -189,10 +197,8 @@ class KnnClassifier:
             x, str
         ), f"Non-string was passed to self._compress_sample: {x}"
 
-        sample_size: int = int(sampling_percentage * self.training_inputs.shape[0])
-        training_inputs = np.random.choice(
-            self.training_inputs, sample_size, replace=False
-        )
+        if training_inputs is None:
+            training_inputs = self.training_inputs
 
         compressed_input_length: int = self.compressor.get_compressed_length(x)
         compressed_input: list = [
@@ -231,6 +237,47 @@ class KnnClassifier:
         stringb = str(stringb)
 
         return stringa + " " + stringb
+
+    def sample_data(
+        self, sampling_percentage: float = 1.0
+    ) -> tuple[np.ndarray, np.ndarray]:
+        """
+        Given a `sampling_percentage`, this method randomly
+        samples data from `self.training_inputs` &
+        `self.training_labels` (if exists) without replacement
+        and returns two numpy arrays containing the randomly
+        sampled data.
+
+        Arguments:
+            sampling_percentage (float): (0, 1.0] % of data to
+                                         randomly sample from the
+                                         training inputs and labels.
+
+        Returns:
+            np.ndarray: Randomly sampled training inputs.
+            np.ndarray: Randomly sampled training labels.
+            np.ndarray: Indices that the training inputs &
+                        labels were sampled.
+        """
+
+        total_inputs: int = self.training_inputs.shape[0]
+        sample_size: int = int(sampling_percentage * total_inputs)
+        randomly_sampled_indices: np.ndarray = np.random.choice(
+            total_inputs, sample_size, replace=False
+        )
+
+        randomly_sampled_inputs: np.ndarray = self.training_inputs[
+            randomly_sampled_indices
+        ]
+        randomly_sampled_labels: np.ndarray = np.array([])
+        if self.training_labels is not None:
+            randomly_sampled_labels = self.training_labels[randomly_sampled_indices]
+
+        return (
+            randomly_sampled_inputs,
+            randomly_sampled_labels,
+            randomly_sampled_indices,
+        )
 
     def predict(
         self,
@@ -286,11 +333,16 @@ class KnnClassifier:
         
         """
 
+        # sample training inputs and labels
+        training_inputs, training_labels, randomly_sampled_indices = self.sample_data(
+            sampling_percentage
+        )
+
         samples: list = []
         combined: list = []
         for sample in tqdm(x, desc="Compressing input..."):
             compressed_sample, combined_length = self._compress_sample(
-                sample, sampling_percentage
+                sample, training_inputs=training_inputs
             )
             samples.append(compressed_sample)
             combined.append(combined_length)
@@ -298,14 +350,14 @@ class KnnClassifier:
         compressed_samples: np.ndarray = np.array(samples)
         compressed_combined: np.ndarray = np.array(combined)
 
+        assert isinstance(training_inputs, np.ndarray)
+        assert isinstance(compressed_samples, np.ndarray)
+        assert isinstance(compressed_combined, np.ndarray)
         assert isinstance(self.compressed_training_inputs, np.ndarray)
 
-        compressed_training_size: int = int(
-            self.compressed_training_inputs.shape[0] * sampling_percentage
-        )
-        compressed_training: np.ndarray = np.random.choice(
-            self.compressed_training_inputs, compressed_training_size
-        )
+        compressed_training: np.ndarray = self.compressed_training_inputs[
+            randomly_sampled_indices
+        ]
 
         distances: np.ndarray = self._calculate_distance(
             compressed_samples, compressed_combined, compressed_training
@@ -317,9 +369,7 @@ class KnnClassifier:
         # get indicies of minimum top_k distances.
         minimum_distance_indices = np.argpartition(distances, top_k)[:, :top_k]
 
-        similar_samples: np.ndarray = self.training_inputs[minimum_distance_indices]
-        labels: np.ndarray = np.array([])
-        if self.training_labels is not None:
-            labels = self.training_labels[minimum_distance_indices]
+        similar_samples: np.ndarray = training_inputs[minimum_distance_indices]
+        labels: np.ndarray = training_labels[minimum_distance_indices]
 
         return distances, labels, similar_samples

@@ -160,3 +160,16 @@ class TestKnnClassifier:
 
         assert full_labels.shape == labels.shape
         assert full_similar_samples.shape == similar_samples.shape
+
+    def test_sample_data(self):
+        sampling_percentage: float = 0.8
+        randomly_sampled_inputs, randomly_sampled_labels, randomly_sampled_indices = self.model.sample_data(
+            sampling_percentage
+        )
+
+        assert randomly_sampled_inputs.shape == randomly_sampled_labels.shape == randomly_sampled_indices.shape
+        assert randomly_sampled_inputs.shape[0] == int(
+            self.model.training_inputs.shape[0] * sampling_percentage
+        )
+
+        assert (self.model.training_inputs[randomly_sampled_indices] == randomly_sampled_inputs).all()
