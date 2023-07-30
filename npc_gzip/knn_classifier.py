@@ -1,4 +1,4 @@
-from typing import Sequence, Union, Optional
+from typing import Optional, Sequence, Union
 
 import numpy as np
 from tqdm import tqdm
@@ -18,6 +18,23 @@ class KnnClassifier:
     training labels data, this class stores
     the data in memory
 
+    >>> import random
+    >>> from npc_gzip.compressors.gzip_compressor import GZipCompressor
+
+    >>> training_data = ["hey", "hi", "how are you?", "not too bad"]
+
+    >>> training_labels = [random.randint(0, 1) for _ in range(len(training_data))]
+    >>> assert len(training_data) == len(training_labels)
+
+    >>> model = KnnClassifier(compressor=GZipCompressor(), training_inputs=training_data, training_labels=training_labels, distance_metric="ncd")
+
+    >>> test = np.array(["hey", "you are a real pain in my ass", "go away please"])
+
+    >>> top_k = 1
+    >>> distances, labels, similar_samples = model.predict(test, top_k=top_k)
+    >>> assert distances.shape == (test.shape[0], len(training_data))
+    >>> assert labels.shape == similar_samples.shape
+    >>> assert distances.shape[0] == labels.shape[0] == similar_samples.shape[0]
     """
 
     def __init__(
@@ -145,7 +162,7 @@ class KnnClassifier:
             raise UnsupportedDistanceMetricException(
                 self.distance_metric,
                 supported_distance_metrics=self.supported_distance_metrics,
-                function_name='_calculate_distance'
+                function_name="_calculate_distance",
             )
 
     def _compress_sample(self, x: str, sampling_percentage: float = 1.0) -> tuple:
@@ -173,10 +190,14 @@ class KnnClassifier:
         ), f"Non-string was passed to self._compress_sample: {x}"
 
         sample_size: int = int(sampling_percentage * self.training_inputs.shape[0])
-        training_inputs = np.random.choice(self.training_inputs, sample_size)
+        training_inputs = np.random.choice(
+            self.training_inputs, sample_size, replace=False
+        )
 
         compressed_input_length: int = self.compressor.get_compressed_length(x)
-        compressed_input: list = [compressed_input_length for _ in range(training_inputs.shape[0])]
+        compressed_input: list = [
+            compressed_input_length for _ in range(training_inputs.shape[0])
+        ]
         compressed_input: np.ndarray = np.array(compressed_input).reshape(-1)
         assert compressed_input.shape == training_inputs.shape
 
@@ -298,29 +319,3 @@ class KnnClassifier:
             labels = self.training_labels[minimum_distance_indices]
 
         return distances, labels, similar_samples
-
-
-if __name__ == "__main__":
-    import random
-
-    from npc_gzip.compressors.gzip_compressor import GZipCompressor
-
-    training_data = ["hey", "hi", "how are you?", "not too bad"]
-
-    training_labels = [random.randint(0, 1) for _ in range(len(training_data))]
-    assert len(training_data) == len(training_labels)
-
-    model = KnnClassifier(
-        compressor=GZipCompressor(),
-        training_inputs=training_data,
-        training_labels=training_labels,
-        distance_metric="ncd",
-    )
-
-    test = np.array(["hey", "you are a real pain in my ass", "go away please"])
-
-    top_k = 1
-    distances, labels, similar_samples = model.predict(test, top_k=top_k)
-    assert distances.shape == (test.shape[0], len(training_data))
-    assert labels.shape == similar_samples.shape
-    assert distances.shape[0] == labels.shape[0] == similar_samples.shape[0]
