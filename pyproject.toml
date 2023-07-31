@@ -39,3 +39,6 @@ scikit-learn = "^1.3.0"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+addopts = "--doctest-modules --ignore original_codebase/ --ignore examples/"
