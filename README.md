@@ -4,7 +4,7 @@ This paper is accepted to Findings of [ACL2023](https://aclanthology.org/2023.fi
 
 ## Getting Started
 
-This codebase is available on pypi.org via 
+This codebase is [available on pypi.org via](https://pypi.org/project/npc-gzip) 
 
 
 ```bash
@@ -18,10 +18,16 @@ See the [examples](./examples/imdb.py) directory for example usage.
 
 ## Testing
 
-This package utilizes `poetry` to maintain it's dependencies and `pytest` to execute tests. To get started running the tests:
+This package utilizes `poetry` to maintain its dependencies and `pytest` to execute tests. To get started running the tests:
 
-1. `poetry install --with test`
-2. `pytest tests/` 
+```bash
+
+poetry shell
+poetry install
+pytest
+
+```
+
 
 
 ### Require
