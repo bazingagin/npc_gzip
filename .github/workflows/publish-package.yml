@@ -28,7 +28,6 @@ jobs:
 
       - name: Run Tests
         run: |
-          python -m pip install --upgrade pip
           poetry install
           poetry run pytest --doctest-modules --ignore original_codebase/ --ignore examples/ --junit-xml=junit/test-results-${{ matrix.python-version }}.xml
           
