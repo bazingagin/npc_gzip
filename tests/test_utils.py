@@ -13,7 +13,7 @@ class TestUtils:
             sentence = generate_sentence(number_of_words)
             assert len(sentence.split()) == number_of_words
 
-        with pytest.raises(InvalidObjectTypeException):
+        with pytest.raises(TypeError):
             generate_sentence("hey there")
 
         with pytest.raises(AssertionError):
@@ -25,7 +25,7 @@ class TestUtils:
             dataset = generate_dataset(number_of_sentences)
             assert len(dataset) == number_of_sentences
 
-        with pytest.raises(InvalidObjectTypeException):
+        with pytest.raises(TypeError):
             generate_dataset("hey there")
 
         with pytest.raises(AssertionError):
