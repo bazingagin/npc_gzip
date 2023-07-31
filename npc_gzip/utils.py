@@ -29,16 +29,6 @@ def generate_sentence(number_of_words: int = 10) -> str:
         str: Sentence of random numbers and letters.
     """
 
-    if not isinstance(number_of_words, int):
-        try:
-            number_of_words = int(number_of_words)
-        except Exception as e:
-            raise InvalidObjectTypeException(
-                type(number_of_words),
-                supported_types=[int, float],
-                function_name="generate_sentence",
-            ) from e
-
     assert number_of_words > 0, f"`number_of_words` must be greater than zero."
 
     words = []
@@ -69,16 +59,6 @@ def generate_dataset(number_of_sentences: int) -> list:
     Returns:
         list: List of sentences (str).
     """
-
-    if not isinstance(number_of_sentences, int):
-        try:
-            number_of_sentences = int(number_of_sentences)
-        except Exception as e:
-            raise InvalidObjectTypeException(
-                type(number_of_sentences),
-                supported_types=[int, float],
-                function_name="generate_dataset",
-            ) from e
 
     assert number_of_sentences > 0, f"`number_of_sentences` must be greater than zero."
 
