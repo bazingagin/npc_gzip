@@ -33,7 +33,6 @@ jobs:
           
       - name: Upload pytest test results
         if: ${{ !cancelled() }}  # Upload results even if tests fail.
-
         uses: actions/upload-artifact@v3
         with:
           name: pytest-results-${{ matrix.python-version }}
