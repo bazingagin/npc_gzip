@@ -26,7 +26,7 @@ This package utilizes `poetry` to maintain its dependencies and `pytest` to exec
 
 poetry shell
 poetry install
-poetry run pytest --doctest-modules --ignore original_codebase/ --ignore examples/
+pytest --doctest-modules --ignore original_codebase/ --ignore examples/
 
 ```
 
