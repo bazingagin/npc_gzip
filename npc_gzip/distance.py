@@ -62,10 +62,6 @@ class Distance:
         if not isinstance(compressed_values_ab, np.ndarray):
             compressed_values_ab = np.array(compressed_values_ab)
 
-        compressed_values_a = compressed_values_a
-        compressed_values_b = compressed_values_b
-        compressed_values_ab = compressed_values_ab
-
         if (
             compressed_values_a.shape
             == compressed_values_b.shape

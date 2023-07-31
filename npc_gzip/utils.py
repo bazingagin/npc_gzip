@@ -1,8 +1,3 @@
-import random
-import string
-
-from npc_gzip.exceptions import InvalidObjectTypeException
-
 """
 Helper functions used primarily in testing the
 rest of the codebase.
@@ -12,6 +7,10 @@ rest of the codebase.
 >>> assert len(dataset) == number_of_sentences
 """
 
+import random
+import string
+
+from npc_gzip.exceptions import InvalidObjectTypeException
 
 def generate_sentence(number_of_words: int = 10) -> str:
     """

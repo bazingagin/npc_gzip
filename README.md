@@ -13,6 +13,8 @@ pip install npc-gzip
 
 ```
 
+## Usage
+
 See the [examples](./examples/imdb.py) directory for example usage.
 
 
@@ -24,13 +26,15 @@ This package utilizes `poetry` to maintain its dependencies and `pytest` to exec
 
 poetry shell
 poetry install
-pytest
+poetry run pytest --doctest-modules --ignore original_codebase/ --ignore examples/
 
 ```
 
+-------------------------
 
+### Original Codebase
 
-### Require
+#### Require
 
 See `requirements.txt`.
 
@@ -41,7 +45,7 @@ conda activate npc
 pip install -r requirements.txt
 ```
 
-### Run
+#### Run
 
 ```
 python main_text.py
@@ -64,7 +68,7 @@ By default, this will only use 100 test and training samples per class as a quic
 
 ```
 
-### Calculate Accuracy (Optional)
+#### Calculate Accuracy (Optional)
 
 If we want to calculate accuracy from recorded distance file <DISTANCE DIR>, use
 
@@ -73,7 +77,7 @@ python main_text.py --record --score --distance_fn <DISTANCE DIR>
 ```
 to calculate accuracy. Otherwise, the accuracy will be calculated automatically using the command in the last section.
 
-### Use Custom Dataset
+#### Use Custom Dataset
 
 You can use your own custom dataset by passing `custom` to `--dataset`; pass the data directory that contains `train.txt` and `test.txt` to `--data_dir`; pass the class number to the `--class_num`.
 
