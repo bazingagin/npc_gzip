@@ -161,7 +161,7 @@ class TestKnnClassifier:
         assert full_labels.shape == labels.shape
         assert full_similar_samples.shape == similar_samples.shape
 
-    def test_sample_data(self):
+    def test_sample_data(self) -> None:
         sampling_percentage: float = 0.8
         (
             randomly_sampled_inputs,
