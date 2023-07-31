@@ -221,28 +221,3 @@ class Distance:
         out = out.reshape(self.compressed_values_a.shape)
 
         return out
-
-
-if __name__ == "__main__":
-    import random
-
-    a = random.random()
-    b = random.random()
-    ab = random.random()
-
-    distance = Distance(a, b, ab)
-    ncd = distance._ncd(a, b, ab)
-    cdm = distance._cdm(a, b, ab)
-    clm = distance._clm(a, b, ab)
-    mse = distance._mse(a, b)
-
-    a = np.random.rand(3, 10)
-    b = np.random.rand(3, 10)
-    ab = np.random.rand(3, 10)
-
-    distance = Distance(a, b, ab)
-
-    ncd = distance.ncd
-    cdm = distance.cdm
-    clm = distance.clm
-    mse = distance.mse
