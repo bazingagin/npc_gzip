@@ -19,7 +19,7 @@ packages = [{include = "npc_gzip"}]
 
 [tool.poetry.dependencies]
 python = "^3.9"
-numpy = "^1.25.1"
+numpy = "^1.25.2"
 tqdm = "^4.65.0"
 
 [tool.poetry.group.test.dependencies]
