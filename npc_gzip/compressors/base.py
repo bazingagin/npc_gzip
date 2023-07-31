@@ -27,7 +27,7 @@ class BaseCompressor:
             )
         self.compressor = compressor
 
-    def _open_file(self, filepath: str, as_bytes: bool = False):
+    def _open_file(self, filepath: str, as_bytes: bool = False) -> str:
         """
         Helper function that loads and returns the contents
         of a file at `filepath`. Optional `as_bytes` parameter
@@ -50,7 +50,6 @@ class BaseCompressor:
 
         with open(filepath, open_mode) as f:
             file_contents = f.read()
-            f.close()
 
         if as_bytes:
             file_contents = file_contents.decode("utf-8")
@@ -69,7 +68,6 @@ class BaseCompressor:
             bytes: The compressed bytes representation of `x`.
         """
 
-        x = str(x)
         x: bytes = x.encode("utf-8")
         compressed: bytes = self.compressor.compress(x)
         return compressed
@@ -103,7 +101,6 @@ class BaseCompressor:
                  characters in `x`.
         """
 
-        x = str(x)
         compressed_value: bytes = self._compress(x)
         compressed_length: int = len(compressed_value)
         compressed_length_in_bits: int = compressed_length * 8

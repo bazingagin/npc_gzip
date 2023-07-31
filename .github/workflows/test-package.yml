@@ -29,7 +29,8 @@ jobs:
           poetry install
           poetry run pytest --junit-xml=junit/test-results-${{ matrix.python-version }}.xml
 
-      - name: Upload pytest test results
+      - name: Upload pytest test results  
+        if: ${{ !cancelled() }}  # Upload results even if tests fail.
         uses: actions/upload-artifact@v3
         with:
           name: pytest-results-${{ matrix.python-version }}
