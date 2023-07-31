@@ -28,10 +28,9 @@ jobs:
 
       - name: Run Tests
         run: |
-          poetry shell
           poetry install
-          pytest --doctest-modules --ignore original_codebase/ --ignore examples/ --junit-xml=junit/test-results-${{ matrix.python-version }}.xml
-        
+          poetry run pytest --doctest-modules --ignore original_codebase/ --ignore examples/ --junit-xml=junit/test-results-${{ matrix.python-version }}.xml
+          
       - name: Upload pytest test results
         uses: actions/upload-artifact@v3
         with:
