@@ -105,11 +105,6 @@ class TestKnnClassifier:
         assert isinstance(distance, np.ndarray)
         assert distance.shape == compressed_input.shape == compressed_combined.shape
 
-    def test_concatenate_with_space(self) -> None:
-        a = "hello there"
-        b = "who goes there?"
-        assert self.model.concatenate_with_space(a, b) == "hello there who goes there?"
-
     def test_predict(self) -> None:
         top_k = 1
         (distance, labels, similar_samples) = self.model.predict(

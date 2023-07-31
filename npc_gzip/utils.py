@@ -12,6 +12,7 @@ import string
 
 from npc_gzip.exceptions import InvalidObjectTypeException
 
+
 def generate_sentence(number_of_words: int = 10) -> str:
     """
     Generates a sentence of random

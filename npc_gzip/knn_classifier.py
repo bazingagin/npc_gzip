@@ -3,6 +3,7 @@ from typing import Optional, Sequence, Union
 import numpy as np
 from tqdm import tqdm
 
+from npc_gzip.aggregations import concatenate_with_space
 from npc_gzip.compressors.base import BaseCompressor
 from npc_gzip.distance import Distance
 from npc_gzip.exceptions import (
@@ -41,7 +42,7 @@ class KnnClassifier:
         self,
         compressor: BaseCompressor,
         training_inputs: Sequence,
-        training_labels: Sequence = None,
+        training_labels: Optional[Sequence] = None,
         distance_metric: str = "ncd",
     ) -> None:
         self.compressor = compressor
@@ -209,7 +210,7 @@ class KnnClassifier:
 
         combined: list = []
         for training_sample in training_inputs:
-            train_and_x: str = self.concatenate_with_space(training_sample, x)
+            train_and_x: str = concatenate_with_space(training_sample, x)
             combined_compressed: int = self.compressor.get_compressed_length(
                 train_and_x
             )
@@ -220,27 +221,9 @@ class KnnClassifier:
 
         return (compressed_input, combined)
 
-    @staticmethod
-    def concatenate_with_space(stringa: str, stringb: str) -> str:
-        """
-        Combines `stringa` and `stringb` with a space.
-
-        Arguments:
-            stringa (str): First item.
-            stringb (str): Second item.
-
-        Returns:
-            str: `{stringa} {stringb}`
-        """
-
-        stringa = str(stringa)
-        stringb = str(stringb)
-
-        return stringa + " " + stringb
-
     def sample_data(
         self, sampling_percentage: float = 1.0
-    ) -> tuple[np.ndarray, np.ndarray]:
+    ) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
         """
         Given a `sampling_percentage`, this method randomly
         samples data from `self.training_inputs` &
@@ -284,9 +267,7 @@ class KnnClassifier:
         x: Sequence,
         top_k: int = 1,
         sampling_percentage: float = 1.0,
-    ) -> tuple[
-        np.ndarray[float, float], np.ndarray[float, float], np.ndarray[float, float]
-    ]:
+    ) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
         """
         Faster version of `predict`. This method
         will compare `x` against a sample of the

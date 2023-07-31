@@ -145,7 +145,7 @@ class UnsupportedDistanceMetricException(Exception):
         super().__init__(self.message)
 
 
-class InvalidObjectTypeException(Exception):
+class InvalidObjectTypeException(TypeError):
     def __init__(
         self,
         passed_type: str,

@@ -23,7 +23,6 @@ class TestBz2Compressor:
         assert isinstance(example_input_length, int)
         assert example_input_length > 0
 
-
     def test_get_bits_per_character(self) -> None:
         example_bits_per_character = self.compressor.get_bits_per_character(
             self.example_input

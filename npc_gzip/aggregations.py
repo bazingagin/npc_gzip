@@ -14,10 +14,6 @@ def concatenate_with_space(stringa: str, stringb: str) -> str:
     Returns:
         str: `{stringa} {stringb}`
     """
-
-    stringa = str(stringa)
-    stringb = str(stringb)
-
     return stringa + " " + stringb
 
 
@@ -36,9 +32,6 @@ def aggregate_strings(stringa: str, stringb: str, by_character: bool = False) ->
     Returns:
         str: combination of stringa and stringb
     """
-
-    stringa = str(stringa)
-    stringb = str(stringb)
 
     stringa_list: list = stringa.split()
     stringb_list: list = stringb.split()
