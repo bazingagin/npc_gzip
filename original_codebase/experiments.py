@@ -1,20 +1,11 @@
 # Experiment framework
 import operator
-import os
-import pickle
 import random
-import statistics
-from collections import Counter, defaultdict
-from copy import deepcopy
-from functools import partial
-from itertools import repeat
-from statistics import mode
+from collections import defaultdict
 from typing import Any, Callable, Optional
 
 import numpy as np
-import torch
 from compressors import DefaultCompressor
-from sklearn.metrics.cluster import adjusted_rand_score, normalized_mutual_info_score
 from tqdm import tqdm
 
 

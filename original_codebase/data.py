@@ -1,16 +1,14 @@
 import csv
 import os
 import random
-from collections import OrderedDict, defaultdict
+from collections import defaultdict
 from collections.abc import Iterable
 from typing import Optional, Sequence, Union
 
 import numpy as np
-import torch
 import unidecode
 from datasets import load_dataset
 from sklearn.datasets import fetch_20newsgroups
-from torch.utils.data import DataLoader, Subset
 
 
 def _load_csv_filepath(csv_filepath: str) -> list:
