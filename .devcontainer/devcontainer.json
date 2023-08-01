@@ -3,14 +3,11 @@
     "customizations": {
         "vscode": {
             "extensions": [
-                "bierner.markdown-preview-github-styles",
                 "eamodio.gitlens",
-                "GitHub.vscode-github-actions",
                 "GitHub.vscode-pull-request-github",
                 "mhutchie.git-graph",
                 "ms-python.isort",
                 "ms-python.python",
-                "ms-toolsai.jupyter",
                 "tamasfe.even-better-toml"
             ],
             "settings": {
