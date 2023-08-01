@@ -43,5 +43,5 @@ jobs:
           poetry build
 
       - name: pypi-publish
-        uses: pypi-publish
+        uses: pypa/gh-action-pypi-publish@v1.8.8
     
