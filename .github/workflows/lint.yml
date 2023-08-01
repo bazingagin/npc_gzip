@@ -5,9 +5,7 @@ on: [push, pull_request]
 jobs:
 
   black:
-
     runs-on: ubuntu-latest
-
     steps:
       - name: Check out repository
         uses: actions/checkout@v3
@@ -21,9 +19,7 @@ jobs:
         uses: psf/black@stable
 
   isort:
-
     runs-on: ubuntu-latest
-
     steps:
       - name: Check out repository
         uses: actions/checkout@v3
