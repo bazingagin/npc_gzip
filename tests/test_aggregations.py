@@ -1,7 +1,4 @@
-import pytest
-
 from npc_gzip.aggregations import aggregate_strings, concatenate_with_space
-from npc_gzip.exceptions import StringTooShortException
 
 
 class TestAggregations:

@@ -1,4 +1,4 @@
-from typing import Optional, Sequence, Union
+from typing import Optional, Sequence
 
 import numpy as np
 from tqdm import tqdm
@@ -86,10 +86,10 @@ class KnnClassifier:
         assert (
             self.training_inputs.shape == self.training_labels.shape
         ), f"""
-        Training Inputs and Labels did not maintain their 
+        Training Inputs and Labels did not maintain their
         shape during the conversion from lists to numpy arrays.
         This is most likely a bug in the numpy package:
-        
+
         self.training_inputs.shape: {self.training_inputs.shape}
         self.training_labels.shape: {self.training_labels.shape}
         """
@@ -309,9 +309,9 @@ class KnnClassifier:
         assert (
             top_k <= x.shape[0]
         ), f"""
-        top_k ({top_k}) must be less or equal to than the number of 
+        top_k ({top_k}) must be less or equal to than the number of
         samples provided to be predicted on ({x.shape[0]})
-        
+
         """
 
         # sample training inputs and labels

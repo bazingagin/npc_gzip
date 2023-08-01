@@ -1,6 +1,5 @@
 import numpy as np
 from sklearn.metrics import classification_report
-from sklearn.utils import shuffle
 from torchtext.datasets import IMDB
 
 from npc_gzip.compressors.base import BaseCompressor

@@ -7,10 +7,8 @@ from npc_gzip.compressors.base import BaseCompressor
 from npc_gzip.compressors.bz2_compressor import Bz2Compressor
 from npc_gzip.compressors.gzip_compressor import GZipCompressor
 from npc_gzip.compressors.lzma_compressor import LzmaCompressor
-from npc_gzip.distance import Distance
 from npc_gzip.exceptions import (
     InputLabelEqualLengthException,
-    InvalidObjectTypeException,
     UnsupportedDistanceMetricException,
 )
 from npc_gzip.knn_classifier import KnnClassifier

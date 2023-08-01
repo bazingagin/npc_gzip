@@ -10,14 +10,12 @@ rest of the codebase.
 import random
 import string
 
-from npc_gzip.exceptions import InvalidObjectTypeException
-
 
 def generate_sentence(number_of_words: int = 10) -> str:
     """
     Generates a sentence of random
-    numbers and letters, with 
-    `number_of_words` words in the 
+    numbers and letters, with
+    `number_of_words` words in the
     sentence such that len(out.split()) \
     == `number_of_words`.
 
