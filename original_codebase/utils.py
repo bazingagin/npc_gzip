@@ -1,7 +1,7 @@
 from collections.abc import Sequence
 
 import numpy as np
-import scipy
+import scipy.stats
 import torch
 
 
@@ -192,9 +192,7 @@ def agg_by_avg(i1: torch.Tensor, i2: torch.Tensor) -> torch.Tensor:
 
 
 def agg_by_min_or_max(
-    i1: torch.Tensor,
-    i2: torch.Tensor,
-    aggregate_by_minimum: bool = False,
+    i1: torch.Tensor, i2: torch.Tensor, aggregate_by_minimum: bool = False
 ) -> torch.Tensor:
     """
     Calculates the average of i1 and i2, rounding to the shortest.

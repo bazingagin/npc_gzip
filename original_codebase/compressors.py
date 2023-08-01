@@ -1,16 +1,14 @@
 # Compressor Framework
-import io
-import sys
+
 from importlib import import_module
 
 import numpy as np
-import torch.nn.functional as F
-from tqdm import tqdm
 
 
 class DefaultCompressor:
     """For non-neural-based compressor"""
-    def __init__(self, compressor, typ='text'):
+
+    def __init__(self, compressor, typ="text"):
         try:
             self.compressor = import_module(compressor)
         except ModuleNotFoundError:
@@ -32,7 +30,7 @@ class DefaultCompressor:
         else:
             return len(self.compressor.compress(np.array(x).tobytes()))
 
-    def get_bits_per_char(self, original_fn: str) -> float:
+    def get_bits_per_character(self, original_fn: str) -> float:
         """
         Returns the compressed size of the original function
         in bits.
@@ -50,6 +48,6 @@ class DefaultCompressor:
 
 
 """Test Compressors"""
-if __name__ == '__main__':
-    comp = DefaultCompressor('gzip')
-    print(comp.get_compressed_len('Hello world'))
+if __name__ == "__main__":
+    comp = DefaultCompressor("gzip")
+    print(comp.get_compressed_len("Hello world"))

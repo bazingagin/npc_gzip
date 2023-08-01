@@ -13,10 +13,9 @@ from typing import Any, Callable, Optional
 
 import numpy as np
 import torch
+from compressors import DefaultCompressor
 from sklearn.metrics.cluster import adjusted_rand_score, normalized_mutual_info_score
 from tqdm import tqdm
-
-from compressors import DefaultCompressor
 
 
 class KnnExpText:
@@ -31,7 +30,9 @@ class KnnExpText:
         self.distance_func = distance_function
         self.distance_matrix: list = []
 
-    def calc_dis(self, data: list, train_data: Optional[list] = None, fast: bool = False) -> None:
+    def calc_dis(
+        self, data: list, train_data: Optional[list] = None, fast: bool = False
+    ) -> None:
         """
         Calculates the distance between either `data` and itself or `data` and `train_data`
         and appends the distance to `self.distance_matrix`.

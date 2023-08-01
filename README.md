@@ -1,8 +1,40 @@
-### Code for Paper: “Low-Resource” Text Classification: A Parameter-Free Classification Method with Compressors
+# Code for Paper: “Low-Resource” Text Classification: A Parameter-Free Classification Method with Compressors
 
 This paper is accepted to Findings of [ACL2023](https://aclanthology.org/2023.findings-acl.426/).
 
-### Require
+## Getting Started
+
+This codebase is [available on pypi.org via](https://pypi.org/project/npc-gzip) 
+
+
+```bash
+
+pip install npc-gzip
+
+```
+
+## Usage
+
+See the [examples](./examples/imdb.py) directory for example usage.
+
+
+## Testing
+
+This package utilizes `poetry` to maintain its dependencies and `pytest` to execute tests. To get started running the tests:
+
+```bash
+
+poetry shell
+poetry install
+pytest
+
+```
+
+-------------------------
+
+### Original Codebase
+
+#### Require
 
 See `requirements.txt`.
 
@@ -13,7 +45,7 @@ conda activate npc
 pip install -r requirements.txt
 ```
 
-### Run
+#### Run
 
 ```
 python main_text.py
@@ -36,7 +68,7 @@ By default, this will only use 100 test and training samples per class as a quic
 
 ```
 
-### Calculate Accuracy (Optional)
+#### Calculate Accuracy (Optional)
 
 If we want to calculate accuracy from recorded distance file <DISTANCE DIR>, use
 
@@ -45,7 +77,7 @@ python main_text.py --record --score --distance_fn <DISTANCE DIR>
 ```
 to calculate accuracy. Otherwise, the accuracy will be calculated automatically using the command in the last section.
 
-### Use Custom Dataset
+#### Use Custom Dataset
 
 You can use your own custom dataset by passing `custom` to `--dataset`; pass the data directory that contains `train.txt` and `test.txt` to `--data_dir`; pass the class number to the `--class_num`.
 

@@ -1,0 +1,44 @@
+name: Publish npc_gzip package
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  
+  publish:
+
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.9"]
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      
+      - name: Install Poetry
+        run: |
+          curl -sSL https://install.python-poetry.org | python3 -
+          poetry --version
+
+      - name: Run Tests
+        run: |
+          poetry install
+          poetry run pytest --junit-xml=junit/test-results-${{ matrix.python-version }}.xml
+          
+      - name: Upload pytest test results
+        if: ${{ !cancelled() }}  # Upload results even if tests fail.
+        uses: actions/upload-artifact@v3
+        with:
+          name: pytest-results-${{ matrix.python-version }}
+          path: junit/test-results-${{ matrix.python-version }}.xml
+
+      - name: Poetry Build & Publish
+        run: |
+          poetry build
+          poetry publish
