@@ -1,0 +1,10 @@
+#!/bin/sh
+
+set -eu
+
+# Set up Poetry and its plugins.
+pipx install poetry
+pipx inject poetry poetry-plugin-sort poetry-plugin-up
+
+# Set up project environment for poetry.
+poetry install
