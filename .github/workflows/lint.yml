@@ -1,0 +1,37 @@
+name: Lint Python code
+
+on: [push, pull_request]
+
+jobs:
+
+  black:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.9"
+
+      - name: Run black
+        uses: psf/black@stable
+
+  isort:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.9"
+
+      - name: Run isort
+        uses: isort/isort-action@v1
