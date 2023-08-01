@@ -8,3 +8,7 @@ pipx inject poetry poetry-plugin-sort poetry-plugin-up
 
 # Set up project environment for poetry.
 poetry install
+
+# Modify the project environment so it can run all examples with no GPU.
+poetry run pip install -U pip setuptools wheel
+poetry run pip install torch --index-url https://download.pytorch.org/whl/cpu
