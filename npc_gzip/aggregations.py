@@ -39,8 +39,5 @@ def aggregate_strings(stringa: str, stringb: str, by_character: bool = False) ->
     zipped_lists: list = list(zip(stringa_list, stringb_list))
     out: list = list(itertools.chain(*zipped_lists))
 
-    aggregated: str = " ".join(out)
-    if by_character:
-        aggregated = "".join(out)
-
+    aggregated: str = ("" if by_character else " ").join(out)
     return aggregated
