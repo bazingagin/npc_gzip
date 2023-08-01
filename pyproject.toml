@@ -42,6 +42,3 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.pytest.ini_options]
 addopts = "--doctest-modules --ignore original_codebase/ --ignore examples/"
-
-[tool.black]
-line-length = 87  # FIXME: Remove after testing.
