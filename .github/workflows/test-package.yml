@@ -5,12 +5,10 @@ on: [push, pull_request]
 jobs:
 
   run-tests:
-
     runs-on: ubuntu-latest
     strategy:
       matrix:
         python-version: ["3.9", "3.10", "3.11"]
-
     steps:
       - name: Check out repository
         uses: actions/checkout@v3
