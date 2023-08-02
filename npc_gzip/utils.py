@@ -16,8 +16,8 @@ from npc_gzip.exceptions import InvalidObjectTypeException
 def generate_sentence(number_of_words: int = 10) -> str:
     """
     Generates a sentence of random
-    numbers and letters, with 
-    `number_of_words` words in the 
+    numbers and letters, with
+    `number_of_words` words in the
     sentence such that len(out.split()) \
     == `number_of_words`.
 
@@ -29,7 +29,7 @@ def generate_sentence(number_of_words: int = 10) -> str:
         str: Sentence of random numbers and letters.
     """
 
-    assert number_of_words > 0, f"`number_of_words` must be greater than zero."
+    assert number_of_words > 0, "`number_of_words` must be greater than zero."
 
     words = []
     for word in range(number_of_words):
@@ -60,7 +60,7 @@ def generate_dataset(number_of_sentences: int) -> list:
         list: List of sentences (str).
     """
 
-    assert number_of_sentences > 0, f"`number_of_sentences` must be greater than zero."
+    assert number_of_sentences > 0, "`number_of_sentences` must be greater than zero."
 
     dataset = []
     for sentence in range(number_of_sentences):
