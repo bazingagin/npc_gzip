@@ -34,7 +34,7 @@ class KnnClassifier:
     >>> top_k = 1
     >>> distances, labels, similar_samples = model.predict(test, top_k=top_k)
     >>> assert distances.shape == (test.shape[0], len(training_data))
-    >>> assert labels.shape == similar_samples.shape
+    >>> assert labels.shape == (test.shape[0], )
     >>> assert distances.shape[0] == labels.shape[0] == similar_samples.shape[0]
     """
 
