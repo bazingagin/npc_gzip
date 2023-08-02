@@ -42,3 +42,9 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.pytest.ini_options]
 addopts = "--doctest-modules --ignore original_codebase/ --ignore examples/"
+
+[tool.isort]
+atomic = true
+include_trailing_comma = true
+line_length = 88  # Match behavior of black.
+multi_line_output = 3  # Vertical hanging indent.
