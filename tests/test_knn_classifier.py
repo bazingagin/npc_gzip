@@ -115,7 +115,7 @@ class TestKnnClassifier:
             len([self.sample_input]),
             self.model.training_inputs.shape[0],
         )
-        assert labels.shape == (len([self.sample_input]), )
+        assert labels.shape == (len([self.sample_input]),)
         assert similar_samples.shape == (top_k, len([self.sample_input]))
 
         test_set_size = random.randint(1, 50)
@@ -124,7 +124,7 @@ class TestKnnClassifier:
         (distance, labels, similar_samples) = self.model.predict(test_set, top_k)
 
         assert distance.shape == (test_set_size, self.model.training_inputs.shape[0])
-        assert labels.shape == (test_set_size, )
+        assert labels.shape == (test_set_size,)
         assert similar_samples.shape == (test_set_size, top_k)
 
     def test_negative_top_k(self) -> None:

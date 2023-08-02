@@ -352,6 +352,8 @@ class KnnClassifier:
 
         similar_samples: np.ndarray = training_inputs[minimum_distance_indices]
         labels: np.ndarray = training_labels[minimum_distance_indices]
-        predicted_labels = np.apply_along_axis(lambda x: np.bincount(x).argmax(), axis=1, arr=labels)
+        predicted_labels = np.apply_along_axis(
+            lambda x: np.bincount(x).argmax(), axis=1, arr=labels
+        )
 
         return distances, predicted_labels, similar_samples
