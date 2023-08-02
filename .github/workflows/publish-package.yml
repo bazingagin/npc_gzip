@@ -14,23 +14,26 @@ jobs:
     permissions:
       id-token: write  # IMPORTANT: this permission is mandatory for trusted publishing
     steps:
-      - uses: actions/checkout@v3
+      - name: Check out repository
+        uses: actions/checkout@v3
 
       - name: Set up Python 3.9
         uses: actions/setup-python@v4
         with:
           python-version: "3.9"
-      
+
       - name: Install Poetry
-        run: |
-          curl -sSL https://install.python-poetry.org | python3 -
-          poetry --version
+        run: curl -sSL https://install.python-poetry.org | python3 -
+
+      - name: Show Poetry version
+        run: poetry --version
+
+      - name: Install project and dependencies
+        run: poetry install
 
       - name: Run Tests
-        run: |
-          poetry install
-          poetry run pytest --junit-xml=junit/test-results-3.9.xml
-          
+        run: poetry run pytest --junit-xml=junit/test-results-3.9.xml
+
       - name: Upload pytest test results
         if: ${{ !cancelled() }}  # Upload results even if tests fail.
         uses: actions/upload-artifact@v3
@@ -38,10 +41,8 @@ jobs:
           name: pytest-results-3.9
           path: junit/test-results-3.9.xml
 
-      - name: Poetry Build
-        run: |
-          poetry build
+      - name: Build Package
+        run: poetry build
 
-      - name: pypi-publish
+      - name: Publish Package
         uses: pypa/gh-action-pypi-publish@v1.8.8
-    
