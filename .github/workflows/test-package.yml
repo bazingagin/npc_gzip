@@ -20,7 +20,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
 
       - name: Install Poetry
-        run: curl -sSL https://install.python-poetry.org | python -
+        run: pip install poetry
 
       - name: Show Poetry version
         run: poetry --version
