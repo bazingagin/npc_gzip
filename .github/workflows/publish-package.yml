@@ -32,14 +32,14 @@ jobs:
         run: poetry install
 
       - name: Run Tests
-        run: poetry run pytest --junit-xml=junit/test-results-3.9.xml
+        run: poetry run pytest --junit-xml=junit/test-results-ubuntu-3.9.xml
 
       - name: Upload pytest test results
         if: ${{ !cancelled() }}  # Upload results even if tests fail.
         uses: actions/upload-artifact@v3
         with:
-          name: pytest-results-3.9
-          path: junit/test-results-3.9.xml
+          name: pytest-results-ubuntu-3.9
+          path: junit/test-results-ubuntu-3.9.xml
 
       - name: Build Package
         run: poetry build
