@@ -112,11 +112,11 @@ class TestKnnClassifier:
         )
 
         assert distance.shape == (
-            len([self.sample_input]),
+            1,
             self.model.training_inputs.shape[0],
         )
-        assert labels.shape == (len([self.sample_input]),)
-        assert similar_samples.shape == (top_k, len([self.sample_input]))
+        assert labels.shape == (1,)
+        assert similar_samples.shape == (top_k, 1)
 
         test_set_size = random.randint(1, 50)
         test_set = [self.sample_input for _ in range(test_set_size)]
