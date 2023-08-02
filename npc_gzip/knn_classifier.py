@@ -27,7 +27,12 @@ class KnnClassifier:
     >>> training_labels = [random.randint(0, 1) for _ in range(len(training_data))]
     >>> assert len(training_data) == len(training_labels)
 
-    >>> model = KnnClassifier(compressor=GZipCompressor(), training_inputs=training_data, training_labels=training_labels, distance_metric="ncd")
+    >>> model = KnnClassifier(
+    ...     compressor=GZipCompressor(),
+    ...     training_inputs=training_data,
+    ...     training_labels=training_labels,
+    ...     distance_metric="ncd",
+    ... )
 
     >>> test = np.array(["hey", "you are a real pain in my ass", "go away please"])
 
@@ -86,10 +91,10 @@ class KnnClassifier:
         assert (
             self.training_inputs.shape == self.training_labels.shape
         ), f"""
-        Training Inputs and Labels did not maintain their 
+        Training Inputs and Labels did not maintain their
         shape during the conversion from lists to numpy arrays.
         This is most likely a bug in the numpy package:
-        
+
         self.training_inputs.shape: {self.training_inputs.shape}
         self.training_labels.shape: {self.training_labels.shape}
         """
@@ -309,9 +314,9 @@ class KnnClassifier:
         assert (
             top_k <= x.shape[0]
         ), f"""
-        top_k ({top_k}) must be less or equal to than the number of 
+        top_k ({top_k}) must be less or equal to than the number of
         samples provided to be predicted on ({x.shape[0]})
-        
+
         """
 
         # sample training inputs and labels
