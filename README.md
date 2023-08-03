@@ -13,7 +13,7 @@ pip install npc-gzip
 
 ## Usage
 
-See the [examples](./examples/imdb.py) directory for example usage.
+See the [examples](./examples/) directory for example usage.
 
 ## Testing
 
