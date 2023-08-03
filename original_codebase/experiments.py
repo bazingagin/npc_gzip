@@ -25,13 +25,14 @@ class KnnExpText:
         self, data: list, train_data: Optional[list] = None, fast: bool = False
     ) -> None:
         """
-        Calculates the distance between either `data` and itself or `data` and `train_data`
-        and appends the distance to `self.distance_matrix`.
+        Calculates the distance between either `data` and itself or `data` and
+        `train_data` and appends the distance to `self.distance_matrix`.
 
         Arguments:
             data (list): Data to compute distance between.
             train_data (list): [Optional] Training data to compute distance from `data`.
-            fast (bool): [Optional] Uses the _fast compression length function of `self.compressor`.
+            fast (bool): [Optional] Uses the _fast compression length function
+                                    of `self.compressor`.
 
         Returns:
             None: None
@@ -68,13 +69,14 @@ class KnnExpText:
         self, data: list, data_len: list = None, train_data: Optional[list] = None
     ) -> None:
         """
-        Calculates the distance between either `data`, `data_len`, or `train_data`
-        and appends the distance to `self.distance_matrix`.
+        Calculates the distance between either `data`, `data_len`, or
+        `train_data` and appends the distance to `self.distance_matrix`.
 
         Arguments:
             data (list): Data to compute distance between.
             train_data (list): [Optional] Training data to compute distance from `data`.
-            fast (bool): [Optional] Uses the _fast compression length function of `self.compressor`.
+            fast (bool): [Optional] Uses the _fast compression length function
+                                    of `self.compressor`.
 
         Returns:
             None: None
@@ -186,7 +188,8 @@ class KnnExpText:
             k (int?): TODO
             label (list): Predicted Labels.
             train_label (list): Correct Labels.
-            provided_distance_matrix (list): Calculated Distance Matrix to use instead of `self.distance_matrix`.
+            provided_distance_matrix (list): Calculated Distance Matrix to use
+                                             instead of `self.distance_matrix`.
             rand (bool): TODO
 
         Returns:
@@ -245,7 +248,8 @@ class KnnExpText:
         train_label: Optional[list] = None,
     ) -> tuple:
         """
-        Calculates the distance and the accuracy of the algorithm for data with training.
+        Calculates the distance and the accuracy of the algorithm for data with
+        training.
 
         Arguments:
             k (int?): TODO
@@ -304,7 +308,8 @@ class KnnExpText:
         label: Any,  # int, as used in this application
     ) -> tuple:
         """
-        Calculates the distance and the accuracy of the algorithm for a single datum with training.
+        Calculates the distance and the accuracy of the algorithm for a single
+        datum with training.
 
         Arguments:
             k (int?): TODO

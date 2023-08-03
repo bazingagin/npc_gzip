@@ -27,7 +27,12 @@ class KnnClassifier:
     >>> training_labels = [random.randint(0, 1) for _ in range(len(training_data))]
     >>> assert len(training_data) == len(training_labels)
 
-    >>> model = KnnClassifier(compressor=GZipCompressor(), training_inputs=training_data, training_labels=training_labels, distance_metric="ncd")
+    >>> model = KnnClassifier(
+    ...     compressor=GZipCompressor(),
+    ...     training_inputs=training_data,
+    ...     training_labels=training_labels,
+    ...     distance_metric="ncd",
+    ... )
 
     >>> test = np.array(["hey", "you are a real pain in my ass", "go away please"])
 

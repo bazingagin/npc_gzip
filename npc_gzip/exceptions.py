@@ -11,7 +11,7 @@ class InvalidCompressorException(Exception):
 
     def __init__(self, compression_library: str) -> None:
         self.message = f"""
-        Compression Library ({compression_library}) 
+        Compression Library ({compression_library})
         is not currently supported.
         """
         super().__init__(self.message)
@@ -25,10 +25,10 @@ class MissingDependencyException(Exception):
 
     def __init__(self, compression_library: str) -> None:
         self.message = f"""
-        Compression Library ({compression_library}) 
-        is missing an underlying dependency. Try 
-        installing those missing dependencies and 
-        load this again. 
+        Compression Library ({compression_library})
+        is missing an underlying dependency. Try
+        installing those missing dependencies and
+        load this again.
 
         Common missing dependencies for:
 
@@ -50,7 +50,7 @@ class StringTooShortException(Exception):
         self.message = f"""
         Unable to aggregate ({stringa}) and ({stringb}).
         One or both of the two strings are too short to concatenate.
-        
+
         """
 
         if function_name is not None:
@@ -66,11 +66,11 @@ class CompressedValuesEqualZero(Exception):
         compressed_value_b: Optional[float] = None,
         function_name: Optional[str] = None,
     ) -> None:
-        self.message = f"""
-        The combination of compressed values passed equal zero. 
+        self.message = """
+        The combination of compressed values passed equal zero.
         This will result in a divide by zero error.
 
-        
+
         """
 
         if function_name is not None:
@@ -91,7 +91,7 @@ class AllOrNoneException(Exception):
             arg1: {type(a)}
             arg2: {type(b)}
             arg3: {type(c)}
-        
+
         """
 
         if function_name is not None:
@@ -112,7 +112,7 @@ class InvalidShapeException(Exception):
             arg1: {array_a.shape}
             arg2: {array_b.shape}
             arg3: {array_c.shape}
-        
+
         """
 
         if function_name is not None:
@@ -128,11 +128,11 @@ class UnsupportedDistanceMetricException(Exception):
         function_name: Optional[str] = None,
     ) -> None:
         self.message = f"""
-        The `distance_metric` ({distance_metric}) provided is not 
+        The `distance_metric` ({distance_metric}) provided is not
         currently supported. Please submit an Issue and/or
         Pull Request here to add support:
         https://github.com/bazingagin/npc_gzip
-        
+
         """
 
         if supported_distance_metrics is not None:
@@ -153,9 +153,9 @@ class InvalidObjectTypeException(TypeError):
         function_name: Optional[str] = None,
     ) -> None:
         self.message = f"""
-        The type passed ({passed_type}) provided is not 
-        currently supported. 
-        
+        The type passed ({passed_type}) provided is not
+        currently supported.
+
         """
 
         if supported_types is not None:
@@ -174,13 +174,13 @@ class InputLabelEqualLengthException(Exception):
         function_name: Optional[str] = None,
     ) -> None:
         self.message = f"""
-        If training labels are passed, the number 
-        of training data samples must equal the 
+        If training labels are passed, the number
+        of training data samples must equal the
         number of training label samples
-        
+
         training_samples: {training_samples}
         label_samples: {label_samples}
-        
+
         """
 
         if function_name is not None:

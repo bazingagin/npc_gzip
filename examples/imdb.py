@@ -70,10 +70,10 @@ def fit_model(
 
 
 def main() -> None:
-    print(f"Fetching data...")
+    print("Fetching data...")
     ((train_text, train_labels), (test_text, test_labels)) = get_data()
 
-    print(f"Fitting model...")
+    print("Fitting model...")
     model = fit_model(train_text, train_labels)
 
     # Randomly sampling from the test set.
@@ -87,7 +87,7 @@ def main() -> None:
     sample_test_text = test_text[random_indicies]
     sample_test_labels = test_labels[random_indicies]
 
-    print(f"Generating predictions...")
+    print("Generating predictions...")
     top_k = 1
 
     # Here we use the `sampling_percentage` to save time

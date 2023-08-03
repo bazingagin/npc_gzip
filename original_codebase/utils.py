@@ -12,7 +12,8 @@ def NCD(c1: float, c2: float, c12: float) -> float:
     Arguments:
         c1 (float): The compressed length of the first object.
         c2 (float): The compressed length of the second object.
-        c12 (float): The compressed length of the concatenation of the first and second objects.
+        c12 (float): The compressed length of the concatenation of the first
+                     and second objects.
 
     Returns:
         float: The Normalized Compression Distance c1 and c2.
@@ -51,7 +52,8 @@ def CDM(c1: float, c2: float, c12: float) -> float:
     Arguments:
         c1 (float): The compressed length of the first object.
         c2 (float): The compressed length of the second object.
-        c12 (float): The compressed length of the concatenation of the first and second objects.
+        c12 (float): The compressed length of the concatenation of the first
+                     and second objects.
 
     Returns:
         float: The Compound Dissimilarity Measure value between c1 and c2.
@@ -72,7 +74,8 @@ def MSE(v1: np.ndarray, v2: np.ndarray) -> float:
         v2 (np.ndarray): The second array.
 
     Returns:
-        float: The Mean Squared Error value, representing the average squared difference between v1 and v2.
+        float: The Mean Squared Error value, representing the average squared
+               difference between v1 and v2.
 
     Formula:
         MSE(v1, v2) = Σ((v1 - v2) ** 2) / len(v1)
@@ -200,8 +203,8 @@ def agg_by_min_or_max(
     Arguments:
         i1 (torch.Tensor): First series of numbers.
         i2 (torch.Tensor): Second series of numbers.
-        aggregate_by_minimum (bool): True if you want to take the minimum of the two series.
-                                     False if you want to take the maximum instead.
+        aggregate_by_minimum (bool): True to take the minimum of the two series.
+                                     False to take the maximum instead.
 
     Returns:
         torch.Tensor: Average of the two series.
