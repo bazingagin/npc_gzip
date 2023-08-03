@@ -1,5 +1,4 @@
 import gzip
-from types import ModuleType
 
 import pytest
 

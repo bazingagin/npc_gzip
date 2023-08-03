@@ -1,7 +1,5 @@
 import itertools
 
-import numpy as np
-
 
 def concatenate_with_space(stringa: str, stringb: str) -> str:
     """

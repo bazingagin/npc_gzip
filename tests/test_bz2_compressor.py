@@ -1,11 +1,7 @@
 import bz2
-from types import ModuleType
-
-import pytest
 
 from npc_gzip.compressors.base import BaseCompressor
 from npc_gzip.compressors.bz2_compressor import Bz2Compressor
-from npc_gzip.exceptions import InvalidCompressorException
 
 
 class TestBz2Compressor:

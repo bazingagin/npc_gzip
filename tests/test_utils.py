@@ -2,7 +2,6 @@ import random
 
 import pytest
 
-from npc_gzip.exceptions import InvalidObjectTypeException
 from npc_gzip.utils import generate_dataset, generate_sentence
 
 

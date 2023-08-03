@@ -1,11 +1,7 @@
 import lzma
-from types import ModuleType
-
-import pytest
 
 from npc_gzip.compressors.base import BaseCompressor
 from npc_gzip.compressors.lzma_compressor import LzmaCompressor
-from npc_gzip.exceptions import InvalidCompressorException
 
 
 class TestBz2Compressor:
