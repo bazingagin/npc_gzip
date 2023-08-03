@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "npc-gzip"
-version = "0.1.0"
+version = "0.1.1"
 description = "Code for Paper: “Low-Resource” Text Classification: A Parameter-Free Classification Method with Compressors"
 authors = [
     "Gin Jiang <bazingagin@gmail.com>",
